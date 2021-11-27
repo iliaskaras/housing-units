@@ -1,2 +1,2 @@
-# housing-units
-A Housing Units API.
+# Housing Units
+### A REST API written with the FastAPI Web Framework
