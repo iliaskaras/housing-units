@@ -23,6 +23,7 @@ class Configuration:
             celery_broker_url: str,
             celery_result_backend: str,
             debug: bool = False,
+            create_db_tables: bool = False,
     ):
         if not postgresql_connection_uri:
             raise InvalidArgumentError("The PostGreSQL connection uri is required.")
@@ -30,13 +31,12 @@ class Configuration:
             raise InvalidArgumentError("The Celery Broker url is required.")
         if not celery_result_backend:
             raise InvalidArgumentError("The Celery Result backend is required.")
-        if not isinstance(debug, bool):
-            raise InvalidArgumentError("The Debug flag is not a boolean.")
 
         self.postgresql_connection_uri = postgresql_connection_uri
         self.celery_broker_url = celery_broker_url
         self.celery_result_backend = celery_result_backend
         self.debug = debug
+        self.create_db_tables = create_db_tables
 
     @classmethod
     def initialize(cls) -> "Configuration":
@@ -91,7 +91,8 @@ class Configuration:
             postgresql_connection_uri=os.getenv("POSTGRESQL_CONNECTION_URI"),
             celery_broker_url=os.getenv("CELERY_BROKER_URL"),
             celery_result_backend=os.getenv("CELERY_RESULT_BACKEND"),
-            debug=True,
+            debug=bool(int(os.getenv("DEBUG", "0"))),
+            create_db_tables=bool(int(os.getenv("CREATE_DB_TABLES", "0"))),
         )
 
     @staticmethod
@@ -108,4 +109,5 @@ class Configuration:
             celery_broker_url="redis://localhost:6379",
             celery_result_backend="redis://localhost:6379",
             debug=True,
+            create_db_tables=True,
         )
