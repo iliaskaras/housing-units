@@ -1,0 +1,52 @@
+version: '3.7'
+networks:
+  housing-units-api-network:
+    driver: bridge
+    name: housing-units-api-network
+services:
+  housing-units-api-postgresql:
+    image: postgres:11
+    container_name: housing-units-api-postgresql
+    restart: always
+    networks:
+      - housing-units-api-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U housing_units_api"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    environment:
+      POSTGRES_USER: "housing_units_api"
+      POSTGRES_PASSWORD: "123456"
+      POSTGRES_DB: "housing_units_api"
+    volumes:
+      - /var/lib/postgresql/housing-units-api/data:/var/lib/postgresql/data
+      - /var/log/postgresql/housing-units-api:/var/log/postgresql
+    ports:
+      - "0.0.0.0:5432:5432"
+  housing-units-api-migrations:
+    image: "housing-units-api-migrations:0.1"
+    container_name: housing-units-api-migrations
+    restart: "no"
+    networks:
+      - housing-units-api-network
+    depends_on:
+      - housing-units-api-postgresql
+  housing-units-api:
+    image: "housing-units-api:0.1"
+    container_name: housing-units-api
+    restart: always
+    networks:
+      - housing-units-api-network
+    environment:
+      HOUSING_UNITS_API_ENVIRONMENT: "local"
+      POSTGRESQL_CONNECTION_URI: "postgresql+psycopg2://housing_units_api:123456@housing-units-api-postgresql:5432/housing_units_api"
+      CELERY_BROKER_URL: "redis://todo:6379/0"
+      CELERY_RESULT_BACKEND: "redis://todo:6379/0"
+    depends_on:
+      - housing-units-api-postgresql
+      - housing-units-api-migrations
+    ports:
+      - "0.0.0.0:8000:8000"
+    volumes:
+      - /mnt/data:/mnt/data
