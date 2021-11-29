@@ -3,14 +3,20 @@ from typing import List
 from dependency_injector.wiring import inject, Provide
 from fastapi import APIRouter, Depends
 
+from application.authentication.utils import BearerJWTAuthorizationService
 from application.rest_api.users.schemas import UserResponse
 from application.users.container import UserContainer
+from application.users.enums import Group
 from application.users.services import GetActiveUsersService
 
 router = APIRouter()
 
 
-@router.get("/active-users", response_model=List[UserResponse])
+@router.get(
+    "/active-users",
+    response_model=List[UserResponse],
+    dependencies=[Depends(BearerJWTAuthorizationService(permission_groups=[Group.admin]))]
+)
 @inject
 async def get_active_users(
         user_service: GetActiveUsersService = Depends(Provide[UserContainer.get_active_users_service]),
