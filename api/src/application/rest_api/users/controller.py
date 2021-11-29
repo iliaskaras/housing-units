@@ -12,4 +12,4 @@ router = APIRouter()
 async def get_users(
         user_service: UserService = Depends(Provide[UserContainer.user_service]),
 ):
-    return user_service.get_users()
+    return await user_service.get_users()
