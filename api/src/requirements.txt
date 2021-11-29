@@ -7,3 +7,6 @@ alembic==1.7.5
 dependency-injector
 psycopg2-binary==2.8.6
 asyncpg==0.25.0
+PyJWT==1.7.1
+python-decouple==3.3
+pydantic[email]

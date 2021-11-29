@@ -10,6 +10,8 @@ ARG housing_units_api_environment="local"
 ARG postgresql_connection_uri="postgresql+psycopg2://housing_units_api:123456@0.0.0.0:5432/housing_units_api"
 ARG debug="0"
 ARG create_db_tables="0"
+ARG secret="32c9c8fd6b25bd81cbe5d64afd835f62cf2ffdd11f9ab321"
+ARG algorithm="HS256"
 
 ARG celery_broker_url="redis://localhost:6379"
 ARG celery_result_backend="redis://localhost:6379"
@@ -21,6 +23,8 @@ ENV DEBUG ${debug}
 ENV CREATE_DB_TABLES ${create_db_tables}
 ENV CELERY_BROKER_URL ${celery_broker_url}
 ENV CELERY_RESULT_BACKEND ${celery_result_backend}
+ENV SECRET ${secret}
+ENV ALGORITHM ${algorithm}
 
 # Create Housing Units API group and user.
 RUN groupadd --system --gid ${housing_units_api_group_id} housingunitsuser \

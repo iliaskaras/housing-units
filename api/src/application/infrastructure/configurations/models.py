@@ -22,6 +22,8 @@ class Configuration:
             postgresql_connection_uri: str,
             celery_broker_url: str,
             celery_result_backend: str,
+            secret: str,
+            algorithm: str = "HS256",
             debug: bool = False,
             create_db_tables: bool = False,
     ):
@@ -31,10 +33,16 @@ class Configuration:
             raise InvalidArgumentError("The Celery Broker url is required.")
         if not celery_result_backend:
             raise InvalidArgumentError("The Celery Result backend is required.")
+        if not secret:
+            raise InvalidArgumentError("The secret is required.")
+        if not algorithm:
+            raise InvalidArgumentError("The algorithm is required.")
 
         self.postgresql_connection_uri = postgresql_connection_uri
         self.celery_broker_url = celery_broker_url
         self.celery_result_backend = celery_result_backend
+        self.secret = secret
+        self.algorithm = algorithm
         self.debug = debug
         self.create_db_tables = create_db_tables
 
@@ -91,6 +99,8 @@ class Configuration:
             postgresql_connection_uri=os.getenv("POSTGRESQL_CONNECTION_URI"),
             celery_broker_url=os.getenv("CELERY_BROKER_URL"),
             celery_result_backend=os.getenv("CELERY_RESULT_BACKEND"),
+            secret=os.getenv("SECRET"),
+            algorithm=os.getenv("ALGORITHM", "HS256"),
             debug=bool(int(os.getenv("DEBUG", "0"))),
             create_db_tables=bool(int(os.getenv("CREATE_DB_TABLES", "0"))),
         )
@@ -108,6 +118,8 @@ class Configuration:
             postgresql_connection_uri='',
             celery_broker_url="redis://localhost:6379",
             celery_result_backend="redis://localhost:6379",
+            secret=os.getenv("SECRET"),
+            algorithm=os.getenv("ALGORITHM", "HS256"),
             debug=True,
             create_db_tables=True,
         )
