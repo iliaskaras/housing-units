@@ -21,19 +21,21 @@ depends_on = None
 
 
 def upgrade():
-    op.execute('INSERT INTO users (uuid, email, password, user_group) VALUES (\'{0}\', \'{1}\', \'{2}\', \'{3}\')'
+    op.execute('INSERT INTO users (uuid, email, password, user_group, is_active) VALUES (\'{0}\', \'{1}\', \'{2}\', \'{3}\', \'{4}\')'
         .format(
             str(uuid.uuid4()),
             'admin_user@admin.com',
             '123456',
-            Group.admin.value)
+            Group.admin.value,
+            True)
         )
-    op.execute('INSERT INTO users (uuid, email, password, user_group) VALUES (\'{0}\', \'{1}\', \'{2}\', \'{3}\')'
+    op.execute('INSERT INTO users (uuid, email, password, user_group, is_active) VALUES (\'{0}\', \'{1}\', \'{2}\', \'{3}\', \'{4}\')'
         .format(
             str(uuid.uuid4()),
             'customer_user@customer.com',
             '123456',
-            Group.customer.value)
+            Group.customer.value,
+            True)
         )
 
 

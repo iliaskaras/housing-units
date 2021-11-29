@@ -43,6 +43,8 @@ services:
       POSTGRESQL_CONNECTION_URI: "postgresql+psycopg2://housing_units_api:123456@housing-units-api-postgresql:5432/housing_units_api"
       CELERY_BROKER_URL: "redis://todo:6379/0"
       CELERY_RESULT_BACKEND: "redis://todo:6379/0"
+      SECRET: "32c9c8fd6b25bd81cbe5d64afd835f62cf2ffdd11f9ab321"
+      ALGORITHM: "HS256"
     depends_on:
       - housing-units-api-postgresql
       - housing-units-api-migrations
