@@ -22,7 +22,7 @@ RUN groupadd --system --gid ${migrations_group_id} migrationuser \
 RUN mkdir -p ${housing_units_api_directory}/src
 
 # Copy Housing Units API migrations code.
-COPY --chown=migrationuser:migrationuser "src" ${housing_units_api_directory}/src/
+COPY --chown=migrationuser:migrationuser "api/src" ${housing_units_api_directory}/src/
 
 WORKDIR ${housing_units_api_directory}/src
 ENV PYTHONPATH ${housing_units_api_directory}/src

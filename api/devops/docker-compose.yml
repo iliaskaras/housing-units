@@ -24,6 +24,13 @@ services:
       - /var/log/postgresql/housing-units-api:/var/log/postgresql
     ports:
       - "0.0.0.0:5432:5432"
+  housing-units-api-redis:
+    container_name: housing-units-api-redis
+    image: redis:6-alpine
+    networks:
+      - housing-units-api-network
+    ports:
+      - "6379:6379"
   housing-units-api-migrations:
     image: "housing-units-api-migrations:0.1"
     container_name: housing-units-api-migrations
@@ -40,9 +47,9 @@ services:
       - housing-units-api-network
     environment:
       HOUSING_UNITS_API_ENVIRONMENT: "local"
-      POSTGRESQL_CONNECTION_URI: "postgresql+psycopg2://housing_units_api:123456@housing-units-api-postgresql:5432/housing_units_api"
-      CELERY_BROKER_URL: "redis://todo:6379/0"
-      CELERY_RESULT_BACKEND: "redis://todo:6379/0"
+      POSTGRESQL_CONNECTION_URI: "postgresql+asyncpg://housing_units_api:123456@housing-units-api-postgresql:5432/housing_units_api"
+      CELERY_BROKER_URL: "redis://housing-units-api-redis:6379/0"
+      CELERY_RESULT_BACKEND: "redis://housing-units-api-redis:6379/0"
       SECRET: "32c9c8fd6b25bd81cbe5d64afd835f62cf2ffdd11f9ab321"
       ALGORITHM: "HS256"
     depends_on:
@@ -52,3 +59,33 @@ services:
       - "0.0.0.0:8000:8000"
     volumes:
       - /mnt/data:/mnt/data
+  housing-units-api-worker:
+    image: "housing-units-api-worker:0.1"
+    container_name: housing-units-api-worker
+    command: celery --app application.celery_worker.celery worker --loglevel=INFO
+    restart: always
+    networks:
+      - housing-units-api-network
+    environment:
+      HOUSING_UNITS_API_ENVIRONMENT: "local"
+      POSTGRESQL_CONNECTION_URI: "postgresql+asyncpg://housing_units_api:123456@housing-units-api-postgresql:5432/housing_units_api"
+      CELERY_BROKER_URL: "redis://housing-units-api-redis:6379/0"
+      CELERY_RESULT_BACKEND: "redis://housing-units-api-redis:6379/0"
+      SECRET: "32c9c8fd6b25bd81cbe5d64afd835f62cf2ffdd11f9ab321"
+      ALGORITHM: "HS256"
+    depends_on:
+      - housing-units-api
+      - housing-units-api-redis
+    volumes:
+      - /mnt/data:/mnt/data
+  flower:
+    image: mher/flower
+    networks:
+      - housing-units-api-network
+    command: [ "celery", "--broker=redis://housing-units-api-redis:6379/0", "flower" ]
+    ports:
+      - 5555:5555
+    depends_on:
+      - housing-units-api
+      - housing-units-api-redis
+      - housing-units-api-worker

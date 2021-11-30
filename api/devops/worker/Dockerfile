@@ -1,7 +1,7 @@
 FROM python:3.8.2
 
-ARG housing_units_api_user_id=9003
-ARG housing_units_api_group_id=9003
+ARG housing_units_api_worker_user_id=9003
+ARG housing_units_api_worker_group_id=9003
 
 # Environment variables such as salt, jwt_secret_key and postgresql_connection_uri should not be desplayed like that
 # and instead be passed with some other mechanism that hides these information. Ansible could be used for example.
@@ -27,9 +27,9 @@ ENV SECRET ${secret}
 ENV ALGORITHM ${algorithm}
 
 # Create Housing Units API group and user.
-RUN groupadd --system --gid ${housing_units_api_group_id} housingunitsuser \
+RUN groupadd --system --gid ${housing_units_api_worker_group_id} housingunitsuser \
   && useradd --system --shell /usr/sbin/nologin \
-             --gid housingunitsuser --uid ${housing_units_api_user_id} housingunitsuser
+             --gid housingunitsuser --uid ${housing_units_api_worker_user_id} housingunitsuser
 
 # Create Housing Units API directory.
 RUN mkdir -p ${housing_units_api_directory}/src \
@@ -44,7 +44,5 @@ RUN pip3 install -r ${housing_units_api_directory}/requirements.txt
 COPY --chown=housingunitsuser:housingunitsuser "api/src" ${housing_units_api_directory}/src/
 
 # Run Housing Units API.
-WORKDIR ${housing_units_api_directory}
+WORKDIR ${housing_units_api_directory}/src
 ENV PYTHONPATH ${housing_units_api_directory}/src
-
-ENTRYPOINT ["uvicorn", "application.main:app", "--host", "0.0.0.0", "--port", "8000"]

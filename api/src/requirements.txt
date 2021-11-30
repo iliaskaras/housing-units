@@ -10,3 +10,5 @@ asyncpg==0.25.0
 PyJWT==1.7.1
 python-decouple==3.3
 pydantic[email]
+celery==4.4.7
+redis==3.5.3
