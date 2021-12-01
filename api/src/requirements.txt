@@ -12,3 +12,4 @@ python-decouple==3.3
 pydantic[email]
 celery==4.4.7
 redis==3.5.3
+uuid==1.30

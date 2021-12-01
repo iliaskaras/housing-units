@@ -8,6 +8,7 @@ from alembic import context
 # access to the values within the .ini file in use.
 from application.infrastructure.database.models import HousingUnitsDBBaseModel
 from application.users.models import User
+from application.housing_units.models import HBDBuilding
 
 config = context.config
 
@@ -20,7 +21,7 @@ fileConfig(config.config_file_name)
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 
-target_metadata = [User.metadata]
+target_metadata = [HousingUnitsDBBaseModel.metadata]
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
