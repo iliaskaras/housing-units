@@ -46,7 +46,7 @@ class GetJWTService:
         payload = {
             "user_id": jwt_body.user_id,
             "group": jwt_body.group,
-            "expires": time.time() + 200
+            "expires": time.time() + 30000
         }
         token: bytes = jwt.encode(payload, self.config.secret, algorithm=self.config.algorithm)
 
