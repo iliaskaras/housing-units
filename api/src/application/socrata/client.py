@@ -55,11 +55,11 @@ class SocrataClient:
     }
     CHUNK_SIZE = 500
 
-    def __init__(self, dataset_id: str = 'hg8x-zxpr'):
-        if not dataset_id:
-            raise NoneArgumentError("Dataset ID is not provided.")
+    def __init__(self, hbd_dataset_id: str = 'hg8x-zxpr'):
+        if not hbd_dataset_id:
+            raise NoneArgumentError("HBD Dataset ID is not provided.")
 
-        self._dataset_id: str = dataset_id
+        self._dataset_id: str = hbd_dataset_id
         self._client = Socrata("data.cityofnewyork.us", None)
         self._client = Socrata(
             "data.cityofnewyork.us",
@@ -68,9 +68,9 @@ class SocrataClient:
 
         self._dataset_size = 10000
 
-    def download_hbd_building_dataset(self) -> DataFrame:
+    def download_housing_units_dataset(self) -> DataFrame:
         """
-        Downloads the HBD Building dataset by providing the dataset id from the Socrata api.
+        Downloads the Housing Units dataset by providing the dataset id from the Socrata api.
 
         :return: The dataframe containing the downloaded results.
         """
@@ -85,11 +85,11 @@ class SocrataClient:
         return dataframe
 
     @classmethod
-    def hbd_building_dataset_generator(cls, hbd_building_dataset: DataFrame) -> DataFrame:
+    def housing_unit_dataset_generator(cls, housing_unit_dataset: DataFrame) -> DataFrame:
         """
-        Breaks the HBD Building dataset into chunks and create a generator out of them.
+        Breaks the Housing Unit dataset into chunks and create a generator out of them.
 
         :return: The yielded chunked dataframe.
         """
-        for pos in range(0, len(hbd_building_dataset), cls.CHUNK_SIZE):
-            yield hbd_building_dataset.iloc[pos:pos + cls.CHUNK_SIZE]
+        for pos in range(0, len(housing_unit_dataset), cls.CHUNK_SIZE):
+            yield housing_unit_dataset.iloc[pos:pos + cls.CHUNK_SIZE]

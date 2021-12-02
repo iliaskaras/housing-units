@@ -8,7 +8,7 @@ from alembic import context
 # access to the values within the .ini file in use.
 from application.infrastructure.database.models import HousingUnitsDBBaseModel
 from application.users.models import User
-from application.housing_units.models import HBDBuilding
+from application.housing_units.models import HousingUnit
 
 config = context.config
 

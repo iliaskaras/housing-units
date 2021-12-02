@@ -6,56 +6,55 @@ from sqlalchemy.future import select
 from sqlalchemy.orm import FromStatement
 from sqlalchemy.sql import Select
 
-from application.housing_units.models import HBDBuilding
+from application.housing_units.models import HousingUnit
 from application.infrastructure.database.database import DatabaseEngineWrapper
 
 
-class HBDBuildingRepository:
+class HousingUnitsRepository:
 
     def __init__(self, db_engine: DatabaseEngineWrapper = None):
         self.db_engine = db_engine
 
-    async def get_by_uuid(self, uuid: str) -> HBDBuilding:
+    async def get_by_uuid(self, uuid: str) -> HousingUnit:
         """
-        Async call using the async session for retrieving a HBDBuilding entry by uuid.
+        Async call using the async session for retrieving a HousingUnit entry by uuid.
 
-        :param uuid: The HBDBuilding's uuid to retrieve.
+        :param uuid: The HousingUnit's uuid to retrieve.
 
-        :return: The HBDBuilding retrieved.
+        :return: The HousingUnit retrieved.
         """
         async with self.db_engine.get_async_session() as session:
-            query: Select = select(HBDBuilding).where(HBDBuilding.uuid == uuid)
+            query: Select = select(HousingUnit).where(HousingUnit.uuid == uuid)
             results: ChunkedIteratorResult = await session.execute(query)
-            hbd_building = results.scalars().first()
-            return hbd_building
+            return results.scalars().first()
 
     def truncate_table(self) -> None:
         """
-        HBDBuilding table truncate using the sync session.
+        HousingUnit table truncate using the sync session.
         """
         with self.db_engine.get_session() as session:
-            session.execute("TRUNCATE TABLE hbdbuildings")
+            session.execute("TRUNCATE TABLE housingunits")
             session.commit()
 
     async def delete(
             self,
             uuid: str,
-    ) -> HBDBuilding:
+    ) -> HousingUnit:
         """
-        Async call using the async session for deleting a HBDBuilding by uuid.
+        Async call using the async session for deleting a HousingUnit by uuid.
 
-        :param uuid: The HBDBuilding's uuid to delete.
+        :param uuid: The HousingUnit's uuid to delete.
 
-        :return: The HBDBuilding deleted.
+        :return: The HousingUnit deleted.
         """
         async with self.db_engine.get_async_session() as session:
             async with session.begin():
                 stmt = (
-                    delete(HBDBuilding).where(HBDBuilding.uuid == uuid)
-                ).returning(HBDBuilding)
+                    delete(HousingUnit).where(HousingUnit.uuid == uuid)
+                ).returning(HousingUnit)
 
                 orm_stmt: FromStatement = (
-                    select(HBDBuilding).from_statement(stmt).execution_options(populate_existing=True)
+                    select(HousingUnit).from_statement(stmt).execution_options(populate_existing=True)
                 )
 
                 return await session.execute(
@@ -64,30 +63,30 @@ class HBDBuildingRepository:
 
     async def save(
             self,
-            hbd_building: HBDBuilding,
-    ) -> HBDBuilding:
+            housing_unit: HousingUnit,
+    ) -> HousingUnit:
         """
-        Async call using the async session for saving a HBDBuilding entry.
+        Async call using the async session for saving a HousingUnit entry.
 
-        :param hbd_building: The HBDBuilding to save.
+        :param housing_unit: The HousingUnit to save.
 
-        :return: The saved HBDBuilding.
+        :return: The saved HousingUnit.
         """
 
         async with self.db_engine.get_async_session() as session:
             async with session.begin():
-                session.add(hbd_building)
-                return hbd_building
+                session.add(housing_unit)
+                return housing_unit
 
     def bulk_save(
             self,
-            hbd_buildings: List[HBDBuilding],
+            housing_units: List[HousingUnit],
     ) -> None:
         """
-        HBDBuilding table bulk save operation using the sync session.
+        HousingUnit table bulk save operation using the sync session.
 
-        :param hbd_buildings: The HBDBuildings to bulk save.
+        :param housing_units: The HousingUnits to bulk save.
         """
         with self.db_engine.get_session() as session:
             with session.begin():
-                session.add_all(hbd_buildings)
+                session.add_all(housing_units)
