@@ -1,5 +1,10 @@
-from sqlalchemy import Column, String, DateTime, Integer
+import math
+from typing import Dict, Any
 
+import numpy
+from sqlalchemy import Column, String, DateTime, Integer, BigInteger, Float
+
+from application.infrastructure.database.mappers import dataframe_timestamp_to_datetime
 from application.infrastructure.database.models import HousingUnitsDBBaseModel
 
 
@@ -48,11 +53,10 @@ class HBDBuilding(HousingUnitsDBBaseModel):
     postcode = Column(
         Integer,
         doc='Zip code',
-        nullable=False,
         index=True,
     )
     bbl = Column(
-        Integer,
+        BigInteger,
         doc='The BBL (Borough, Block, and Lot) is a unique identifier for each tax lot in the City.'
     )
     bin = Column(
@@ -77,30 +81,29 @@ class HBDBuilding(HousingUnitsDBBaseModel):
             'the building is located.',
     )
     latitude = Column(
-        Integer,
+        Float,
         doc='The Latitude and Longitude specify the location of the property on the earth’s surface. '
             'The coordinates provided are an estimate of the location based on the street segment and address range.'
     )
     longitude = Column(
-        Integer,
+        Float,
         doc='The Latitude and Longitude specify the location of the property on the earth’s surface. '
             'The coordinates provided are an estimate of the location based on the street segment and address range.'
     )
     latitude_internal = Column(
-        Integer,
+        Float,
         doc='The Latitude (Internal) and Longitude (Internal) specify the location of the property on the earth’s '
             'surface. The coordinates provided are of the internal centroid derived from the tax lot.'
     )
     longitude_internal = Column(
-        Integer,
+        Float,
         doc='The Latitude (Internal) and Longitude (Internal) specify the location of the property on the earth’s '
             'surface. The coordinates provided are of the internal centroid derived from the tax lot.'
     )
     building_completion_date = Column(
         DateTime,
         doc='The Building Completion Date is the date the building was completed. The field is blank if the building '
-            'has not completed.',
-        nullable=False
+            'has not completed.'
     )
     reporting_construction_type = Column(
         String,
@@ -108,7 +111,6 @@ class HBDBuilding(HousingUnitsDBBaseModel):
             '‘new construction’ or ‘preservation’ in Housing New York statistics. Note that some preservation projects '
             'included here may not actually involve construction, because they extend the project’s regulatory '
             'restrictions but do not require rehabilitation.',
-        nullable=False,
         index=True,
     )
     extended_affordability_status = Column(
@@ -219,3 +221,60 @@ class HBDBuilding(HousingUnitsDBBaseModel):
         doc='The Total Units field indicates the total number of units, affordable and market rate, in each building.',
         index=True,
     )
+
+    @staticmethod
+    def from_dict(dictionary: Dict[str, Any]) -> 'HBDBuilding':
+        """
+        Maps the fields to their correct types, for being inserted correctly to the DB.
+        The following maps are performed:
+        1. Socrata's dates are mapped to datetime objects.
+        2. String to integers, and strings to floats when the field is integer or float.
+        3. NaN values to None.
+
+        :param dictionary: Dictionary coming from the SocrataClient, which representing a single HBDBuilding entry.
+
+        :return: The HBDBuilding with the field types corrected.
+        """
+        return HBDBuilding(
+            project_id=dictionary['project_id'],
+            project_name=dictionary['project_name'],
+            project_start_date=dataframe_timestamp_to_datetime(dictionary['project_start_date']) if dictionary['project_start_date'] is not numpy.nan else None,
+            project_completion_date=dataframe_timestamp_to_datetime(dictionary['project_completion_date']) if dictionary['project_completion_date'] is not numpy.nan else None,
+            building_id=int(dictionary['building_id']) if not math.isnan(dictionary['building_id']) else None,
+            house_number=dictionary['house_number'],
+            street_name=dictionary['street_name'],
+            borough=dictionary['borough'],
+            postcode=int(dictionary['postcode']) if not math.isnan(dictionary['postcode']) else None,
+            bbl=int(dictionary['bbl']) if not math.isnan(dictionary['bbl']) else None,
+            bin=int(dictionary['bin']) if not math.isnan(dictionary['bin']) else None,
+            community_board=dictionary['community_board'],
+            council_district=int(dictionary['building_id']) if not math.isnan(dictionary['building_id']) else None,
+            census_tract=dictionary['census_tract'] if isinstance(dictionary['census_tract'], str) else None,
+            neighborhood_tabulation_area=dictionary['neighborhood_tabulation_area'] if isinstance(dictionary['neighborhood_tabulation_area'], str) else None,
+            latitude=dictionary['latitude'] if not math.isnan(dictionary['latitude']) else None,
+            longitude=dictionary['longitude'] if not math.isnan(dictionary['longitude']) else None,
+            latitude_internal=dictionary['latitude_internal'] if not math.isnan(dictionary['latitude_internal']) else None,
+            longitude_internal=dictionary['longitude_internal'] if not math.isnan(dictionary['longitude_internal']) else None,
+            building_completion_date=dataframe_timestamp_to_datetime(dictionary['building_completion_date']) if dictionary['building_completion_date'] is not numpy.nan else None,
+            reporting_construction_type=dictionary['reporting_construction_type'],
+            extended_affordability_status=dictionary['extended_affordability_status'],
+            prevailing_wage_status=dictionary['prevailing_wage_status'],
+            extremely_low_income_units=int(dictionary['extremely_low_income_units']) if not math.isnan(dictionary['extremely_low_income_units']) else None,
+            very_low_income_units=int(dictionary['very_low_income_units']) if not math.isnan(dictionary['very_low_income_units']) else None,
+            low_income_units=int(dictionary['low_income_units']) if not math.isnan(dictionary['low_income_units']) else None,
+            moderate_income_units=int(dictionary['moderate_income_units']) if not math.isnan(dictionary['moderate_income_units']) else None,
+            middle_income_units=int(dictionary['middle_income_units']) if not math.isnan(dictionary['middle_income_units']) else None,
+            other_income_units=int(dictionary['other_income_units']) if not math.isnan(dictionary['other_income_units']) else None,
+            studio_units=int(dictionary['studio_units']) if not math.isnan(dictionary['studio_units']) else None,
+            _1_br_units=int(dictionary['_1_br_units']) if not math.isnan(dictionary['_1_br_units']) else None,
+            _2_br_units=int(dictionary['_2_br_units']) if not math.isnan(dictionary['_2_br_units']) else None,
+            _3_br_units=int(dictionary['_3_br_units']) if not math.isnan(dictionary['_3_br_units']) else None,
+            _4_br_units=int(dictionary['_4_br_units']) if not math.isnan(dictionary['_4_br_units']) else None,
+            _5_br_units=int(dictionary['_5_br_units']) if not math.isnan(dictionary['_5_br_units']) else None,
+            _6_br_units=int(dictionary['_6_br_units']) if not math.isnan(dictionary['_6_br_units']) else None,
+            unknown_br_units=int(dictionary['unknown_br_units']) if  not math.isnan(dictionary['unknown_br_units']) else None,
+            counted_rental_units=int(dictionary['counted_rental_units']) if not math.isnan(dictionary['counted_rental_units']) else None,
+            counted_homeownership_units=int(dictionary['counted_homeownership_units']) if not math.isnan(dictionary['counted_homeownership_units']) else None,
+            all_counted_units=int(dictionary['all_counted_units']) if not math.isnan(dictionary['all_counted_units']) else None,
+            total_units=int(dictionary['total_units']) if not math.isnan(dictionary['total_units']) else None
+        )

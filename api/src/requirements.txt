@@ -13,3 +13,6 @@ pydantic[email]
 celery==4.4.7
 redis==3.5.3
 uuid==1.30
+sodapy==2.1.0
+pandas==1.3.4
+numpy==1.21.4

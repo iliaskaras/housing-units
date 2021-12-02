@@ -6,6 +6,10 @@ import uuid
 
 
 class DatabaseBaseModel(object):
+    """
+    Database Base model, adds common functionality to all the Database Tables.
+    """
+
     @declared_attr
     def __tablename__(cls):
         # Since our class models are named in singular, we are making their table names in plural.
@@ -15,4 +19,5 @@ class DatabaseBaseModel(object):
     uuid = Column(UUID(as_uuid=True), unique=True, nullable=False, default=uuid.uuid4)
 
 
+# The Base model that all the API tables should inherit from.
 HousingUnitsDBBaseModel = declarative_base(cls=DatabaseBaseModel)

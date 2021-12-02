@@ -30,7 +30,7 @@ services:
     networks:
       - housing-units-api-network
     ports:
-      - "6379:6379"
+      - "0.0.0.0:6379:6379"
   housing-units-api-migrations:
     image: "housing-units-api-migrations:0.1"
     container_name: housing-units-api-migrations
@@ -47,11 +47,13 @@ services:
       - housing-units-api-network
     environment:
       HOUSING_UNITS_API_ENVIRONMENT: "local"
-      POSTGRESQL_CONNECTION_URI: "postgresql+asyncpg://housing_units_api:123456@housing-units-api-postgresql:5432/housing_units_api"
+      ASYNC_POSTGRESQL_CONNECTION_URI: "postgresql+asyncpg://housing_units_api:123456@housing-units-api-postgresql:5432/housing_units_api"
+      POSTGRESQL_CONNECTION_URI: "postgresql+psycopg2://housing_units_api:123456@housing-units-api-postgresql:5432/housing_units_api"
       CELERY_BROKER_URL: "redis://housing-units-api-redis:6379/0"
       CELERY_RESULT_BACKEND: "redis://housing-units-api-redis:6379/0"
       SECRET: "32c9c8fd6b25bd81cbe5d64afd835f62cf2ffdd11f9ab321"
       ALGORITHM: "HS256"
+      SOCRATA_APP_TOKEN: "bMQxufH6NyYPXWyCwtjYVx1OH"
     depends_on:
       - housing-units-api-postgresql
       - housing-units-api-migrations
@@ -68,12 +70,15 @@ services:
       - housing-units-api-network
     environment:
       HOUSING_UNITS_API_ENVIRONMENT: "local"
-      POSTGRESQL_CONNECTION_URI: "postgresql+asyncpg://housing_units_api:123456@housing-units-api-postgresql:5432/housing_units_api"
+      ASYNC_POSTGRESQL_CONNECTION_URI: "postgresql+asyncpg://housing_units_api:123456@housing-units-api-postgresql:5432/housing_units_api"
+      POSTGRESQL_CONNECTION_URI: "postgresql+psycopg2://housing_units_api:123456@housing-units-api-postgresql:5432/housing_units_api"
       CELERY_BROKER_URL: "redis://housing-units-api-redis:6379/0"
       CELERY_RESULT_BACKEND: "redis://housing-units-api-redis:6379/0"
       SECRET: "32c9c8fd6b25bd81cbe5d64afd835f62cf2ffdd11f9ab321"
       ALGORITHM: "HS256"
+      SOCRATA_APP_TOKEN: "bMQxufH6NyYPXWyCwtjYVx1OH"
     depends_on:
+      - housing-units-api-postgresql
       - housing-units-api
       - housing-units-api-redis
     volumes:

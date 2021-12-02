@@ -3,6 +3,9 @@ from typing import List
 
 
 class APIEnvironment(Enum):
+    """
+    Application supported environments.
+    """
     local = "local"
     test = "test"
 
