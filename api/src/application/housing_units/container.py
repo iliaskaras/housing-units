@@ -1,7 +1,7 @@
 from dependency_injector import containers, providers
 from dependency_injector.providers import Singleton
 
-from application.housing_units.repositories import HBDBuildingRepository
+from application.housing_units.repositories import HousingUnitsRepository
 from application.infrastructure.database.database import DatabaseEngineWrapper
 from application.rest_api.housing_units.services import HousingUnitsDataIngestionService
 from application.task_status.services import GetTaskStatusReportService
@@ -18,8 +18,8 @@ class HousingUnitsContainer(containers.DeclarativeContainer):
         ]
     )
 
-    hbd_building_repository: Singleton = providers.Singleton(
-        HBDBuildingRepository,
+    housing_units_repository: Singleton = providers.Singleton(
+        HousingUnitsRepository,
         db_engine=DatabaseEngineWrapper
     )
 

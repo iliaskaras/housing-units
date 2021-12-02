@@ -8,7 +8,7 @@ from application.infrastructure.database.mappers import dataframe_timestamp_to_d
 from application.infrastructure.database.models import HousingUnitsDBBaseModel
 
 
-class HBDBuilding(HousingUnitsDBBaseModel):
+class HousingUnit(HousingUnitsDBBaseModel):
     project_id = Column(
         String,
         doc='The Project ID is a unique numeric identifier assigned to each project by HPD.',
@@ -223,7 +223,7 @@ class HBDBuilding(HousingUnitsDBBaseModel):
     )
 
     @staticmethod
-    def from_dict(dictionary: Dict[str, Any]) -> 'HBDBuilding':
+    def from_dict(dictionary: Dict[str, Any]) -> 'HousingUnit':
         """
         Maps the fields to their correct types, for being inserted correctly to the DB.
         The following maps are performed:
@@ -231,11 +231,11 @@ class HBDBuilding(HousingUnitsDBBaseModel):
         2. String to integers, and strings to floats when the field is integer or float.
         3. NaN values to None.
 
-        :param dictionary: Dictionary coming from the SocrataClient, which representing a single HBDBuilding entry.
+        :param dictionary: Dictionary coming from the SocrataClient, which representing a single HousingUnit entry.
 
-        :return: The HBDBuilding with the field types corrected.
+        :return: The HousingUnit with the field types corrected.
         """
-        return HBDBuilding(
+        return HousingUnit(
             project_id=dictionary['project_id'],
             project_name=dictionary['project_name'],
             project_start_date=dataframe_timestamp_to_datetime(dictionary['project_start_date']) if dictionary['project_start_date'] is not numpy.nan else None,
