@@ -1,8 +1,7 @@
 from dependency_injector.wiring import inject, Provide
 from fastapi import APIRouter, Depends
 
-from application.rest_api.authentication.models import LoginPostRequestBody
-from application.rest_api.authentication.schemas import AuthenticateJwtResponse
+from application.rest_api.authentication.schemas import AuthenticateJwtResponse, LoginPostRequestBody
 from application.users.container import UserContainer
 from application.users.services import LoginUserService
 

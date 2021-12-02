@@ -23,6 +23,7 @@ RUN mkdir -p ${housing_units_api_directory}/src
 
 # Copy Housing Units API migrations code.
 COPY --chown=migrationuser:migrationuser "api/src" ${housing_units_api_directory}/src/
+RUN pip3 install -r ${housing_units_api_directory}/src/requirements.txt
 
 WORKDIR ${housing_units_api_directory}/src
 ENV PYTHONPATH ${housing_units_api_directory}/src

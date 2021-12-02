@@ -22,6 +22,7 @@ class LoginUserService:
     async def apply(self, email: str = None, password: str = None) -> AuthenticateJwtResponse:
         """
         Authenticates the user and returns the jwt in case of success.
+        The user must exist and be active.
 
         :param email: The User email.
         :param password: The User password.
