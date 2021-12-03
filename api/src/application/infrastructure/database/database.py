@@ -1,3 +1,4 @@
+from asyncio import current_task
 from contextlib import asynccontextmanager, contextmanager
 from typing import Optional
 
@@ -8,14 +9,14 @@ from sqlalchemy.engine import Engine
 from application.infrastructure.configurations.models import Configuration
 from application.infrastructure.database.models import HousingUnitsDBBaseModel
 from sqlalchemy.orm import sessionmaker, scoped_session, Session
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, AsyncEngine
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, AsyncEngine, async_scoped_session
 
 
 @attrs
 class AsyncDBEngine:
     async_engine = attrib(type=AsyncEngine)
     async_session = attrib(type=sessionmaker)
-    async_scoped_session_factory = attrib(type=scoped_session)
+    async_scoped_session_factory = attrib(type=async_scoped_session)
 
 
 @attrs
@@ -47,8 +48,9 @@ class DatabaseEngineWrapper:
             cls.ASYNC_DB_ENGINE = AsyncDBEngine(
                 async_engine=async_engine,
                 async_session=async_session,
-                async_scoped_session_factory=scoped_session(
-                    session_factory=async_session
+                async_scoped_session_factory=async_scoped_session(
+                    session_factory=async_session,
+                    scopefunc=current_task
                 )
             )
         if not cls.DB_ENGINE:
@@ -107,3 +109,8 @@ class DatabaseEngineWrapper:
             raise ex
         finally:
             _scoped_session.close()
+
+    @classmethod
+    def reset(cls):
+        cls.DB_ENGINE = None
+        cls.ASYNC_DB_ENGINE = None

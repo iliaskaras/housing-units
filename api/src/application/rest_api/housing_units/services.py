@@ -1,4 +1,10 @@
+from typing import Optional, List
+
+from application.housing_units.models import HousingUnit
+from application.housing_units.repositories import HousingUnitsRepository
 from application.infrastructure.error.errors import InvalidArgumentError
+from application.rest_api.housing_units.errors import InvalidNumUnitsError
+from application.rest_api.housing_units.schemas import FilterHousingUnits
 from application.rest_api.task_status.schemas import TaskStatus
 from application.socrata.tasks import housing_unit_raw_data_ingestion_task
 from application.task_status.services import GetTaskStatusReportService
@@ -30,3 +36,55 @@ class HousingUnitsDataIngestionService:
         task = housing_unit_raw_data_ingestion_task.delay(hbd_dataset_id, reset_table)
 
         return self._get_task_status_report_service.apply(task_id=task.id)
+
+
+class FilterHousingUnitsService:
+
+    def __init__(
+            self,
+            housing_units_repository: HousingUnitsRepository,
+    ) -> None:
+        self._housing_units_repository: HousingUnitsRepository = housing_units_repository
+
+    async def apply(
+            self,
+            street_name: Optional[str] = None,
+            borough: Optional[str] = None,
+            postcode: Optional[str] = None,
+            construction_type: Optional[str] = None,
+            num_units_min: Optional[int] = None,
+            num_units_max: Optional[int] = None,
+    ) -> FilterHousingUnits:
+        """
+        Service that filters the HousingUnits based on the provided filtering fields.
+
+        :param street_name: The Housing Unit street name.
+        :param borough: The Housing Unit borough.
+        :param postcode: The Housing Unit postcode.
+        :param construction_type: The Housing Unit construction type.
+        :param num_units_min: The Housing Unit num_units_min.
+        :param num_units_max: The Housing Unit num_units_max.
+
+        :return: The Housing Units retrieved from the filtering, and a number indicating the total number of results.
+
+        :raises InvalidNumUnitsErrors: When the num_units_max is smaller than num_units_min.
+        """
+        if num_units_max is not None and num_units_min is not None:
+            if num_units_max < num_units_min:
+                raise InvalidNumUnitsError(
+                    "The provided number of maximum units can't be smaller than the number of minimum units"
+                )
+
+        housing_units: List[HousingUnit] = await self._housing_units_repository.filter(
+            street_name=street_name,
+            borough=borough,
+            postcode=postcode,
+            construction_type=construction_type,
+            num_units_min=num_units_min,
+            num_units_max=num_units_max,
+        )
+
+        return FilterHousingUnits(
+            housing_units=housing_units,
+            total=len(housing_units)
+        )
