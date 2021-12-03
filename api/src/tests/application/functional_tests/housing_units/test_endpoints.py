@@ -355,3 +355,170 @@ async def test_retrieve_housing_unit_get_request_raise_authorization_error_when_
     )
     assert response.status_code == 403
     assert response.json() == {'detail': 'Not authenticated'}
+
+
+@pytest.mark.asyncio
+async def test_post_housing_unit_request(
+        populate_users, populate_housing_units, stub_housing_units, admin_jwt_token, full_housing_unit_request_body
+):
+    response = client.post(
+        "/housing-units/",
+        headers={"Authorization": "Bearer {}".format(admin_jwt_token)},
+        json=full_housing_unit_request_body
+    )
+    assert response.status_code == 200
+    response_json = response.json()
+    assert response_json.get('uuid', None)
+    response_json.pop('uuid')
+
+    # Update the fields that didn't passed to the request body, since the response will contain them as None.
+    full_housing_unit_request_body['five_br_units'] = None
+    full_housing_unit_request_body['four_br_units'] = None
+    full_housing_unit_request_body['six_br_units'] = None
+    full_housing_unit_request_body['three_br_units'] = None
+    full_housing_unit_request_body['two_br_units'] = None
+
+    assert response_json == full_housing_unit_request_body
+
+
+@pytest.mark.asyncio
+async def test_post_housing_unit_request_called_by_admin(
+        populate_users, populate_housing_units, stub_housing_units, admin_jwt_token, full_housing_unit_request_body
+):
+    response = client.post(
+        "/housing-units/",
+        headers={"Authorization": "Bearer {}".format(admin_jwt_token)},
+        json=full_housing_unit_request_body
+    )
+    assert response.status_code == 200
+    response_json = response.json()
+    assert response_json.get('uuid', None)
+    response_json.pop('uuid')
+
+    # Update the fields that didn't passed to the request body, since the response will contain them as None.
+    full_housing_unit_request_body['five_br_units'] = None
+    full_housing_unit_request_body['four_br_units'] = None
+    full_housing_unit_request_body['six_br_units'] = None
+    full_housing_unit_request_body['three_br_units'] = None
+    full_housing_unit_request_body['two_br_units'] = None
+
+    assert response_json == full_housing_unit_request_body
+
+
+@pytest.mark.asyncio
+async def test_post_housing_unit_request_called_by_customer(
+        populate_users, populate_housing_units, stub_housing_units, customer_jwt_token, full_housing_unit_request_body
+):
+    response = client.post(
+        "/housing-units/",
+        headers={"Authorization": "Bearer {}".format(customer_jwt_token)},
+        json=full_housing_unit_request_body
+    )
+    assert response.status_code == 200
+    response_json = response.json()
+    assert response_json.get('uuid', None)
+    response_json.pop('uuid')
+
+    # Update the fields that didn't passed to the request body, since the response will contain them as None.
+    full_housing_unit_request_body['five_br_units'] = None
+    full_housing_unit_request_body['four_br_units'] = None
+    full_housing_unit_request_body['six_br_units'] = None
+    full_housing_unit_request_body['three_br_units'] = None
+    full_housing_unit_request_body['two_br_units'] = None
+
+    assert response_json == full_housing_unit_request_body
+
+
+@pytest.mark.asyncio
+async def test_post_housing_unit_request_raise_authorization_error_when_jwt_not_provided(
+        populate_users, populate_housing_units, stub_housing_units
+):
+    response = client.post(
+        "/housing-units/",
+    )
+    assert response.status_code == 403
+    assert response.json() == {'detail': 'Not authenticated'}
+
+
+@pytest.mark.asyncio
+async def test_post_housing_unit_request_raise_unprocessable_entity_errors(
+        populate_users,
+        populate_housing_units,
+        stub_housing_units,
+        admin_jwt_token,
+        full_housing_unit_request_body
+):
+    # Remove project_id which is required.
+    full_housing_unit_request_body.pop('project_id')
+    # Add a wrong formatted date to date fields.
+    full_housing_unit_request_body['project_completion_date'] = 'not_correct_date'
+    full_housing_unit_request_body['building_completion_date'] = 'not_correct_date'
+    full_housing_unit_request_body['project_start_date'] = 'not_correct_date'
+    # Add string to integer and float fields.
+    full_housing_unit_request_body['postcode'] = 'not_correct_integer_or_float'
+    full_housing_unit_request_body['total_units'] = 'not_correct_integer_or_float'
+    full_housing_unit_request_body['building_id'] = 'not_correct_integer_or_float'
+    full_housing_unit_request_body['bbl'] = 'not_correct_integer_or_float'
+    full_housing_unit_request_body['bin'] = 'not_correct_integer_or_float'
+    full_housing_unit_request_body['council_district'] = 'not_correct_integer_or_float'
+    full_housing_unit_request_body['latitude'] = 'not_correct_integer_or_float'
+    full_housing_unit_request_body['longitude'] = 'not_correct_integer_or_float'
+    full_housing_unit_request_body['latitude_internal'] = 'not_correct_integer_or_float'
+    full_housing_unit_request_body['longitude_internal'] = 'not_correct_integer_or_float'
+    full_housing_unit_request_body['extremely_low_income_units'] = 'not_correct_integer_or_float'
+    full_housing_unit_request_body['very_low_income_units'] = 'not_correct_integer_or_float'
+    full_housing_unit_request_body['low_income_units'] = 'not_correct_integer_or_float'
+    full_housing_unit_request_body['moderate_income_units'] = 'not_correct_integer_or_float'
+    full_housing_unit_request_body['middle_income_units'] = 'not_correct_integer_or_float'
+    full_housing_unit_request_body['other_income_units'] = 'not_correct_integer_or_float'
+    full_housing_unit_request_body['studio_units'] = 'not_correct_integer_or_float'
+    full_housing_unit_request_body['one_br_units'] = 'not_correct_integer_or_float'
+    full_housing_unit_request_body['unknown_br_units'] = 'not_correct_integer_or_float'
+    full_housing_unit_request_body['counted_rental_units'] = 'not_correct_integer_or_float'
+    full_housing_unit_request_body['counted_homeownership_units'] = 'not_correct_integer_or_float'
+    full_housing_unit_request_body['all_counted_units'] = 'not_correct_integer_or_float'
+
+    response = client.post(
+        "/housing-units/",
+        headers={"Authorization": "Bearer {}".format(admin_jwt_token)},
+        json=full_housing_unit_request_body
+    )
+    assert response.status_code == 422
+
+    assert response.json() == {
+        'detail': [
+            {'loc': ['body', 'one_br_units'], 'msg': 'value is not a valid integer', 'type': 'type_error.integer'},
+            {'loc': ['body', 'project_id'], 'msg': 'field required', 'type': 'value_error.missing'},
+            {'loc': ['body', 'building_id'], 'msg': 'value is not a valid integer', 'type': 'type_error.integer'},
+            {'loc': ['body', 'bbl'], 'msg': 'value is not a valid integer', 'type': 'type_error.integer'},
+            {'loc': ['body', 'bin'], 'msg': 'value is not a valid integer', 'type': 'type_error.integer'},
+            {'loc': ['body', 'council_district'], 'msg': 'value is not a valid integer', 'type': 'type_error.integer'},
+            {'loc': ['body', 'latitude'], 'msg': 'value is not a valid float', 'type': 'type_error.float'},
+            {'loc': ['body', 'longitude'], 'msg': 'value is not a valid float', 'type': 'type_error.float'},
+            {'loc': ['body', 'latitude_internal'], 'msg': 'value is not a valid float', 'type': 'type_error.float'},
+            {'loc': ['body', 'longitude_internal'], 'msg': 'value is not a valid float', 'type': 'type_error.float'},
+            {'loc': ['body', 'extremely_low_income_units'], 'msg': 'value is not a valid integer',
+             'type': 'type_error.integer'},
+            {'loc': ['body', 'very_low_income_units'], 'msg': 'value is not a valid integer',
+             'type': 'type_error.integer'},
+            {'loc': ['body', 'low_income_units'], 'msg': 'value is not a valid integer', 'type': 'type_error.integer'},
+            {'loc': ['body', 'moderate_income_units'], 'msg': 'value is not a valid integer',
+             'type': 'type_error.integer'},
+            {'loc': ['body', 'middle_income_units'], 'msg': 'value is not a valid integer', 'type': 'type_error.integer'},
+            {'loc': ['body', 'other_income_units'], 'msg': 'value is not a valid integer', 'type': 'type_error.integer'},
+            {'loc': ['body', 'studio_units'], 'msg': 'value is not a valid integer', 'type': 'type_error.integer'},
+            {'loc': ['body', 'unknown_br_units'], 'msg': 'value is not a valid integer', 'type': 'type_error.integer'},
+            {'loc': ['body', 'counted_rental_units'], 'msg': 'value is not a valid integer',
+             'type': 'type_error.integer'},
+            {'loc': ['body', 'counted_homeownership_units'], 'msg': 'value is not a valid integer',
+             'type': 'type_error.integer'},
+            {'loc': ['body', 'all_counted_units'], 'msg': 'value is not a valid integer', 'type': 'type_error.integer'},
+            {'loc': ['body', 'postcode'], 'msg': 'value is not a valid integer', 'type': 'type_error.integer'},
+            {'loc': ['body', 'total_units'], 'msg': 'value is not a valid integer', 'type': 'type_error.integer'},
+            {'loc': ['body', 'project_start_date'], 'msg': 'invalid datetime format', 'type': 'value_error.datetime'},
+            {'loc': ['body', 'project_completion_date'], 'msg': 'invalid datetime format',
+             'type': 'value_error.datetime'},
+            {'loc': ['body', 'building_completion_date'], 'msg': 'invalid datetime format',
+             'type': 'value_error.datetime'}
+        ]
+    }

@@ -22,7 +22,7 @@ class HousingUnitPostRequestBody:
     five_br_units: Optional[int] = None
     six_br_units: Optional[int] = None
     project_name: Optional[str] = None
-    project_id: Optional[str] = None
+    project_id: str = Field()
     street_name: Optional[str] = None
     building_id: Optional[int] = None
     house_number: Optional[str] = None
