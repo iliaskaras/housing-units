@@ -13,6 +13,51 @@ class DataIngestionPostRequestBody:
     reset_table: Optional[bool] = True
 
 
+@dataclass
+class HousingUnitPostRequestBody:
+    one_br_units: Optional[int] = None
+    two_br_units: Optional[int] = None
+    three_br_units: Optional[int] = None
+    four_br_units: Optional[int] = None
+    five_br_units: Optional[int] = None
+    six_br_units: Optional[int] = None
+    project_name: Optional[str] = None
+    project_id: str = Field()
+    street_name: Optional[str] = None
+    building_id: Optional[int] = None
+    house_number: Optional[str] = None
+    bbl: Optional[int] = None
+    bin: Optional[int] = None
+    community_board: Optional[str] = None
+    council_district: Optional[int] = None
+    census_tract: Optional[str] = None
+    neighborhood_tabulation_area: Optional[str] = None
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
+    latitude_internal: Optional[float] = None
+    longitude_internal: Optional[float] = None
+    extended_affordability_status: Optional[str] = None
+    prevailing_wage_status: Optional[str] = None
+    extremely_low_income_units: Optional[int] = None
+    very_low_income_units: Optional[int] = None
+    low_income_units: Optional[int] = None
+    moderate_income_units: Optional[int] = None
+    middle_income_units: Optional[int] = None
+    other_income_units: Optional[int] = None
+    studio_units: Optional[int] = None
+    unknown_br_units: Optional[int] = None
+    counted_rental_units: Optional[int] = None
+    counted_homeownership_units: Optional[int] = None
+    all_counted_units: Optional[int] = None
+    borough: Optional[str] = None
+    postcode: Optional[int] = None
+    reporting_construction_type: Optional[str] = None
+    total_units: Optional[int] = None
+    project_start_date: Optional[datetime] = None
+    project_completion_date: Optional[datetime] = None
+    building_completion_date: Optional[datetime] = None
+
+
 class HousingUnitResponse(BaseModel):
     id: Optional[UUID] = Field(alias="uuid")
     project_id: Optional[str]
@@ -37,7 +82,14 @@ class HousingUnitResponse(BaseModel):
         orm_mode = True
 
 
-class FullHousingUnitResponse(HousingUnitResponse):
+class FullHousingUnitResponse(BaseModel):
+    id: Optional[UUID] = Field(alias="uuid")
+    project_id: Optional[str]
+    street_name: Optional[str]
+    borough: Optional[str]
+    postcode: Optional[int]
+    construction_type: Optional[str] = Field(alias="reporting_construction_type")
+    total_units: Optional[int]
     project_name: Optional[str]
     project_start_date: Optional[datetime]
     project_completion_date: Optional[datetime]
@@ -63,12 +115,12 @@ class FullHousingUnitResponse(HousingUnitResponse):
     middle_income_units: Optional[int]
     other_income_units: Optional[int]
     studio_units: Optional[int]
-    _1_br_units: Optional[int]
-    _2_br_units: Optional[int]
-    _3_br_units: Optional[int]
-    _4_br_units: Optional[int]
-    _5_br_units: Optional[int]
-    _6_br_units: Optional[int]
+    one_br_units: Optional[int]
+    two_br_units: Optional[int]
+    three_br_units: Optional[int]
+    four_br_units: Optional[int]
+    five_br_units: Optional[int]
+    six_br_units: Optional[int]
     unknown_br_units: Optional[int]
     counted_rental_units: Optional[int]
     counted_homeownership_units: Optional[int]

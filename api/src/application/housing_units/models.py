@@ -165,35 +165,42 @@ class HousingUnit(HousingUnitsDBBaseModel):
         doc='Studio Units are units with 0-bedrooms.',
         index=True,
     )
-    _1_br_units = Column(
+    one_br_units = Column(
+        '_1_br_units',
         Integer,
         doc='1-BR Units are units with 1-bedroom.',
         index=True,
     )
-    _2_br_units = Column(
+    two_br_units = Column(
+        '_2_br_units',
         Integer,
         doc='2-BR Units are units with 2-bedrooms.',
         index=True,
     )
-    _3_br_units = Column(
+    three_br_units = Column(
+        '_3_br_units',
         Integer,
         doc='3-BR Units are units with 3-bedrooms.',
         index=True,
     )
-    _4_br_units = Column(
+    four_br_units = Column(
+        '_4_br_units',
         Integer,
         doc='4-BR Units are units with 4-bedrooms.',
         index=True,
     )
-    _5_br_units = Column(
+    five_br_units = Column(
+        '_5_br_units',
         Integer,
         doc='5-BR Units are units with 5-bedrooms.',
         index=True,
     )
-    _6_br_units = Column(
+    six_br_units = Column(
+        '_6_br_units',
         Integer,
         doc='6-BR+ Units are units with 6-bedrooms or more.',
         index=True,
+
     )
     unknown_br_units = Column(
         Integer,
@@ -318,12 +325,12 @@ class HousingUnit(HousingUnitsDBBaseModel):
                 and self.middle_income_units == other.middle_income_units \
                 and self.other_income_units == other.other_income_units \
                 and self.studio_units == other.studio_units \
-                and self._1_br_units == other._1_br_units \
-                and self._2_br_units == other._2_br_units \
-                and self._3_br_units == other._3_br_units \
-                and self._4_br_units == other._4_br_units \
-                and self._5_br_units == other._5_br_units \
-                and self._6_br_units == other._6_br_units \
+                and self.one_br_units == other.one_br_units \
+                and self.two_br_units == other.two_br_units \
+                and self.three_br_units == other.three_br_units \
+                and self.four_br_units == other.four_br_units \
+                and self.five_br_units == other.five_br_units \
+                and self.six_br_units == other.six_br_units \
                 and self.unknown_br_units == other.unknown_br_units \
                 and self.counted_rental_units == other.counted_rental_units \
                 and self.counted_homeownership_units == other.counted_homeownership_units \

@@ -4,9 +4,9 @@ from fastapi import APIRouter, Depends
 from application.authentication.utils import BearerJWTAuthorizationService
 from application.housing_units.container import HousingUnitsContainer
 from application.rest_api.housing_units.schemas import DataIngestionPostRequestBody, \
-    FilterHousingUnitsGetRequestParameters, FilterHousingUnits, FullHousingUnitResponse
+    FilterHousingUnitsGetRequestParameters, FilterHousingUnits, FullHousingUnitResponse, HousingUnitPostRequestBody
 from application.rest_api.housing_units.services import HousingUnitsDataIngestionService, FilterHousingUnitsService, \
-    RetrieveHousingUnitService
+    RetrieveHousingUnitService, CreateHousingUnitService
 from application.rest_api.task_status.schemas import TaskStatus
 
 from application.users.enums import Group
@@ -102,3 +102,28 @@ async def get_housing_unit(
     :return: The filtered HousingUnits.
     """
     return await retrieve_housing_unit_service.apply(uuid=housing_unit_id)
+
+
+@router.post(
+    "/housing-units/",
+    dependencies=[Depends(BearerJWTAuthorizationService(permission_groups=[Group.customer, Group.admin]))],
+    response_description="Post Housing Unit endpoint.",
+    response_model=FullHousingUnitResponse,
+    status_code=200
+)
+@inject
+async def post_housing_unit(
+        housing_unit_post_request_body: HousingUnitPostRequestBody,
+        create_housing_unit_service: CreateHousingUnitService = Depends(
+            Provide[HousingUnitsContainer.create_housing_unit_service]
+        )
+):
+    """
+    Controller for creating a HousingUnit entry.
+
+    :param housing_unit_post_request_body: The housing unit body.
+    :param create_housing_unit_service:  The service responsible for creating the HousingUnit.
+
+    :return: The created HousingUnits.
+    """
+    return await create_housing_unit_service.apply(housing_unit_body=housing_unit_post_request_body)

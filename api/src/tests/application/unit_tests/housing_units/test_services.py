@@ -8,9 +8,9 @@ from celery.result import AsyncResult
 from application.housing_units.models import HousingUnit
 from application.infrastructure.error.errors import InvalidArgumentError
 from application.rest_api.housing_units.errors import InvalidNumUnitsError
-from application.rest_api.housing_units.schemas import FilterHousingUnits
+from application.rest_api.housing_units.schemas import FilterHousingUnits, HousingUnitPostRequestBody
 from application.rest_api.housing_units.services import FilterHousingUnitsService, HousingUnitsDataIngestionService, \
-    RetrieveHousingUnitService
+    RetrieveHousingUnitService, CreateHousingUnitService
 from application.rest_api.task_status.schemas import TaskStatus
 from application.task_status.services import GetTaskStatusReportService
 
@@ -212,3 +212,81 @@ class TestRetrieveHousingUnitService:
         self.mock_housing_units_repository.get_by_uuid.assert_called_once_with(uuid=stub_housing_units[0].uuid)
 
         assert result == stub_housing_units[0]
+
+
+class TestCreateHousingUnitService:
+
+    @pytest.fixture(autouse=True)
+    def setup(self) -> None:
+        self.mock_housing_units_repository = AsyncMock()
+
+        self.create_housing_unit_service = CreateHousingUnitService(
+            housing_units_repository=self.mock_housing_units_repository
+        )
+
+    @pytest.mark.asyncio
+    async def test_apply_raise_error_when_body_not_provided(self) -> None:
+        expected_error: InvalidArgumentError = InvalidArgumentError("The housing unit body is not provided.")
+
+        with pytest.raises(InvalidArgumentError) as ex:
+            await self.create_housing_unit_service.apply(None)
+
+        assert ex.value.args == expected_error.args
+        assert ex.value.error_type == expected_error.error_type
+        assert ex.value.message == expected_error.message
+
+    @pytest.mark.asyncio
+    async def test_apply(self, stub_housing_units, full_housing_unit_request_body) -> None:
+        housing_unit_body: HousingUnitPostRequestBody = HousingUnitPostRequestBody(**full_housing_unit_request_body)
+
+        repository_input = HousingUnit(
+            project_id=housing_unit_body.project_id,
+            project_name=housing_unit_body.project_name,
+            project_start_date=housing_unit_body.project_start_date,
+            project_completion_date=housing_unit_body.project_completion_date,
+            building_id=housing_unit_body.building_id,
+            house_number=housing_unit_body.house_number,
+            street_name=housing_unit_body.street_name,
+            borough=housing_unit_body.borough,
+            postcode=housing_unit_body.postcode,
+            bbl=housing_unit_body.bbl,
+            bin=housing_unit_body.bin,
+            community_board=housing_unit_body.community_board,
+            council_district=housing_unit_body.council_district,
+            census_tract=housing_unit_body.census_tract,
+            neighborhood_tabulation_area=housing_unit_body.neighborhood_tabulation_area,
+            latitude=housing_unit_body.latitude,
+            longitude=housing_unit_body.longitude,
+            latitude_internal=housing_unit_body.latitude_internal,
+            longitude_internal=housing_unit_body.longitude_internal,
+            building_completion_date=housing_unit_body.building_completion_date,
+            reporting_construction_type=housing_unit_body.reporting_construction_type,
+            extended_affordability_status=housing_unit_body.extended_affordability_status,
+            prevailing_wage_status=housing_unit_body.prevailing_wage_status,
+            extremely_low_income_units=housing_unit_body.extremely_low_income_units,
+            very_low_income_units=housing_unit_body.very_low_income_units,
+            low_income_units=housing_unit_body.low_income_units,
+            moderate_income_units=housing_unit_body.moderate_income_units,
+            middle_income_units=housing_unit_body.middle_income_units,
+            other_income_units=housing_unit_body.other_income_units,
+            studio_units=housing_unit_body.studio_units,
+            one_br_units=housing_unit_body.one_br_units,
+            two_br_units=housing_unit_body.two_br_units,
+            three_br_units=housing_unit_body.three_br_units,
+            four_br_units=housing_unit_body.four_br_units,
+            five_br_units=housing_unit_body.five_br_units,
+            six_br_units=housing_unit_body.six_br_units,
+            unknown_br_units=housing_unit_body.unknown_br_units,
+            counted_rental_units=housing_unit_body.counted_rental_units,
+            counted_homeownership_units=housing_unit_body.counted_homeownership_units,
+            all_counted_units=housing_unit_body.all_counted_units,
+            total_units=housing_unit_body.total_units,
+        )
+        self.mock_housing_units_repository.save.return_value = repository_input
+
+        self.mock_housing_units_repository.get_by_uuid.return_value = stub_housing_units[0]
+        result = await self.create_housing_unit_service.apply(housing_unit_body)
+
+        self.mock_housing_units_repository.save.assert_called_once_with(repository_input)
+
+        assert result == repository_input

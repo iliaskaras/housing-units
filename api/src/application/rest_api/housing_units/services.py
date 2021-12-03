@@ -4,7 +4,7 @@ from application.housing_units.models import HousingUnit
 from application.housing_units.repositories import HousingUnitsRepository
 from application.infrastructure.error.errors import InvalidArgumentError
 from application.rest_api.housing_units.errors import InvalidNumUnitsError
-from application.rest_api.housing_units.schemas import FilterHousingUnits
+from application.rest_api.housing_units.schemas import FilterHousingUnits, HousingUnitPostRequestBody
 from application.rest_api.task_status.schemas import TaskStatus
 from application.socrata.tasks import housing_unit_raw_data_ingestion_task
 from application.task_status.services import GetTaskStatusReportService
@@ -115,5 +115,78 @@ class RetrieveHousingUnitService:
             raise InvalidArgumentError("The uuid is not provided.")
 
         housing_unit: HousingUnit = await self._housing_units_repository.get_by_uuid(uuid=uuid)
+
+        return housing_unit
+
+
+class CreateHousingUnitService:
+
+    def __init__(
+            self,
+            housing_units_repository: HousingUnitsRepository,
+    ) -> None:
+        self._housing_units_repository: HousingUnitsRepository = housing_units_repository
+
+    async def apply(
+            self,
+            housing_unit_body: HousingUnitPostRequestBody = None,
+    ) -> HousingUnit:
+        """
+        Service that creates the HousingUnit based on the provided housing unit body.
+
+        :param housing_unit_body: The Housing Unit fields.
+
+        :return: The Housing Units created from the provided body.
+
+        :raises InvalidNumUnitsErrors: When the housing_unit_body is not provided.
+        """
+        if not housing_unit_body:
+            raise InvalidArgumentError("The housing unit body is not provided.")
+
+        housing_unit: HousingUnit = await self._housing_units_repository.save(
+            HousingUnit(
+                project_id=housing_unit_body.project_id,
+                project_name=housing_unit_body.project_name,
+                project_start_date=housing_unit_body.project_start_date,
+                project_completion_date=housing_unit_body.project_completion_date,
+                building_id=housing_unit_body.building_id,
+                house_number=housing_unit_body.house_number,
+                street_name=housing_unit_body.street_name,
+                borough=housing_unit_body.borough,
+                postcode=housing_unit_body.postcode,
+                bbl=housing_unit_body.bbl,
+                bin=housing_unit_body.bin,
+                community_board=housing_unit_body.community_board,
+                council_district=housing_unit_body.council_district,
+                census_tract=housing_unit_body.census_tract,
+                neighborhood_tabulation_area=housing_unit_body.neighborhood_tabulation_area,
+                latitude=housing_unit_body.latitude,
+                longitude=housing_unit_body.longitude,
+                latitude_internal=housing_unit_body.latitude_internal,
+                longitude_internal=housing_unit_body.longitude_internal,
+                building_completion_date=housing_unit_body.building_completion_date,
+                reporting_construction_type=housing_unit_body.reporting_construction_type,
+                extended_affordability_status=housing_unit_body.extended_affordability_status,
+                prevailing_wage_status=housing_unit_body.prevailing_wage_status,
+                extremely_low_income_units=housing_unit_body.extremely_low_income_units,
+                very_low_income_units=housing_unit_body.very_low_income_units,
+                low_income_units=housing_unit_body.low_income_units,
+                moderate_income_units=housing_unit_body.moderate_income_units,
+                middle_income_units=housing_unit_body.middle_income_units,
+                other_income_units=housing_unit_body.other_income_units,
+                studio_units=housing_unit_body.studio_units,
+                one_br_units=housing_unit_body.one_br_units,
+                two_br_units=housing_unit_body.two_br_units,
+                three_br_units=housing_unit_body.three_br_units,
+                four_br_units=housing_unit_body.four_br_units,
+                five_br_units=housing_unit_body.five_br_units,
+                six_br_units=housing_unit_body.six_br_units,
+                unknown_br_units=housing_unit_body.unknown_br_units,
+                counted_rental_units=housing_unit_body.counted_rental_units,
+                counted_homeownership_units=housing_unit_body.counted_homeownership_units,
+                all_counted_units=housing_unit_body.all_counted_units,
+                total_units=housing_unit_body.total_units,
+            )
+        )
 
         return housing_unit
