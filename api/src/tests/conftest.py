@@ -1,5 +1,7 @@
 import os
 
+import uuid
+
 from application.authentication.models import JwtBody
 from application.authentication.services import GetJWTService
 from application.authentication.validators import JwtValidator
@@ -78,6 +80,7 @@ def stub_users() -> List[User]:
 def stub_housing_units() -> List[HousingUnit]:
     housing_units: List[HousingUnit] = [
         HousingUnit(
+            uuid=str(uuid.uuid4()),
             project_id='project id 1',
             street_name='street name test 1',
             borough='Queens',
@@ -86,6 +89,7 @@ def stub_housing_units() -> List[HousingUnit]:
             total_units=2
         ),
         HousingUnit(
+            uuid=str(uuid.uuid4()),
             project_id='project id 2',
             street_name='street name test 2',
             borough='Brooklyn',
@@ -94,6 +98,7 @@ def stub_housing_units() -> List[HousingUnit]:
             total_units=4
         ),
         HousingUnit(
+            uuid=str(uuid.uuid4()),
             project_id='project id 3',
             street_name='street name test 3',
             borough='Staten Island',
@@ -102,6 +107,7 @@ def stub_housing_units() -> List[HousingUnit]:
             total_units=6
         ),
         HousingUnit(
+            uuid=str(uuid.uuid4()),
             project_id='project id 4',
             street_name='street name test 4',
             borough='Manhattan',
@@ -110,6 +116,7 @@ def stub_housing_units() -> List[HousingUnit]:
             total_units=8
         ),
         HousingUnit(
+            uuid=str(uuid.uuid4()),
             project_id='project id 5',
             street_name='street name test 5',
             borough='Bronx',
@@ -118,6 +125,7 @@ def stub_housing_units() -> List[HousingUnit]:
             total_units=10
         ),
         HousingUnit(
+            uuid=str(uuid.uuid4()),
             project_id='project id 6',
             street_name='street name test 1',
             borough='Queens',
@@ -126,6 +134,7 @@ def stub_housing_units() -> List[HousingUnit]:
             total_units=12
         ),
         HousingUnit(
+            uuid=str(uuid.uuid4()),
             project_id='project id 7',
             street_name='street name test 2',
             borough='Brooklyn',
@@ -134,6 +143,7 @@ def stub_housing_units() -> List[HousingUnit]:
             total_units=14
         ),
         HousingUnit(
+            uuid=str(uuid.uuid4()),
             project_id='project id 8',
             street_name='street name test 3',
             borough='Staten Island',
@@ -142,6 +152,7 @@ def stub_housing_units() -> List[HousingUnit]:
             total_units=16
         ),
         HousingUnit(
+            uuid=str(uuid.uuid4()),
             project_id='project id 9',
             street_name='street name test 4',
             borough='Manhattan',
@@ -150,6 +161,7 @@ def stub_housing_units() -> List[HousingUnit]:
             total_units=18
         ),
         HousingUnit(
+            uuid=str(uuid.uuid4()),
             project_id='project id 10',
             street_name='street name test 5',
             borough='Bronx',
@@ -158,6 +170,7 @@ def stub_housing_units() -> List[HousingUnit]:
             total_units=20
         ),
         HousingUnit(
+            uuid=str(uuid.uuid4()),
             project_id='project id 11',
             street_name='street name test 1',
             borough='Queens',
@@ -166,6 +179,7 @@ def stub_housing_units() -> List[HousingUnit]:
             total_units=16
         ),
         HousingUnit(
+            uuid=str(uuid.uuid4()),
             project_id='project id 12',
             street_name='street name test 1',
             borough='Queens',
@@ -174,6 +188,7 @@ def stub_housing_units() -> List[HousingUnit]:
             total_units=25
         ),
         HousingUnit(
+            uuid=str(uuid.uuid4()),
             project_id='project id 12',
             street_name='street name test 1',
             borough='Queens',

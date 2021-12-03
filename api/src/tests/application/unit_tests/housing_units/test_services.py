@@ -9,7 +9,8 @@ from application.housing_units.models import HousingUnit
 from application.infrastructure.error.errors import InvalidArgumentError
 from application.rest_api.housing_units.errors import InvalidNumUnitsError
 from application.rest_api.housing_units.schemas import FilterHousingUnits
-from application.rest_api.housing_units.services import FilterHousingUnitsService, HousingUnitsDataIngestionService
+from application.rest_api.housing_units.services import FilterHousingUnitsService, HousingUnitsDataIngestionService, \
+    RetrieveHousingUnitService
 from application.rest_api.task_status.schemas import TaskStatus
 from application.task_status.services import GetTaskStatusReportService
 
@@ -179,3 +180,35 @@ class TestFilterHousingUnitsService:
         )
 
         assert result == expected_response
+
+
+class TestRetrieveHousingUnitService:
+
+    @pytest.fixture(autouse=True)
+    def setup(self) -> None:
+        self.mock_housing_units_repository = AsyncMock()
+
+        self.retrieve_housing_unit_service = RetrieveHousingUnitService(
+            housing_units_repository=self.mock_housing_units_repository
+        )
+
+    @pytest.mark.asyncio
+    async def test_apply_raise_error_when_uuid_not_provided(self) -> None:
+        expected_error: InvalidArgumentError = InvalidArgumentError("The uuid is not provided.")
+
+        with pytest.raises(InvalidArgumentError) as ex:
+            await self.retrieve_housing_unit_service.apply(
+                uuid=None
+            )
+        assert ex.value.args == expected_error.args
+        assert ex.value.error_type == expected_error.error_type
+        assert ex.value.message == expected_error.message
+
+    @pytest.mark.asyncio
+    async def test_apply(self, stub_housing_units) -> None:
+        self.mock_housing_units_repository.get_by_uuid.return_value = stub_housing_units[0]
+        result = await self.retrieve_housing_unit_service.apply(uuid=stub_housing_units[0].uuid)
+
+        self.mock_housing_units_repository.get_by_uuid.assert_called_once_with(uuid=stub_housing_units[0].uuid)
+
+        assert result == stub_housing_units[0]
