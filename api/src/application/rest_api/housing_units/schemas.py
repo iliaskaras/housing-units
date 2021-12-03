@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Optional, List
 
 from fastapi import Query
@@ -33,6 +34,47 @@ class HousingUnitResponse(BaseModel):
                 "total_units": 5,
             }
         }
+        orm_mode = True
+
+
+class FullHousingUnitResponse(HousingUnitResponse):
+    project_name: Optional[str]
+    project_start_date: Optional[datetime]
+    project_completion_date: Optional[datetime]
+    building_id: Optional[int]
+    house_number: Optional[str]
+    bbl: Optional[int]
+    bin: Optional[int]
+    community_board: Optional[str]
+    council_district: Optional[int]
+    census_tract: Optional[str]
+    neighborhood_tabulation_area: Optional[str]
+    latitude: Optional[float]
+    longitude: Optional[float]
+    latitude_internal: Optional[float]
+    longitude_internal: Optional[float]
+    building_completion_date: Optional[datetime]
+    extended_affordability_status: Optional[str]
+    prevailing_wage_status: Optional[str]
+    extremely_low_income_units: Optional[int]
+    very_low_income_units: Optional[int]
+    low_income_units: Optional[int]
+    moderate_income_units: Optional[int]
+    middle_income_units: Optional[int]
+    other_income_units: Optional[int]
+    studio_units: Optional[int]
+    _1_br_units: Optional[int]
+    _2_br_units: Optional[int]
+    _3_br_units: Optional[int]
+    _4_br_units: Optional[int]
+    _5_br_units: Optional[int]
+    _6_br_units: Optional[int]
+    unknown_br_units: Optional[int]
+    counted_rental_units: Optional[int]
+    counted_homeownership_units: Optional[int]
+    all_counted_units: Optional[int]
+
+    class Config:
         orm_mode = True
 
 

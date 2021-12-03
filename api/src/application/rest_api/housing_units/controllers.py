@@ -4,8 +4,9 @@ from fastapi import APIRouter, Depends
 from application.authentication.utils import BearerJWTAuthorizationService
 from application.housing_units.container import HousingUnitsContainer
 from application.rest_api.housing_units.schemas import DataIngestionPostRequestBody, \
-    FilterHousingUnitsGetRequestParameters, FilterHousingUnits
-from application.rest_api.housing_units.services import HousingUnitsDataIngestionService, FilterHousingUnitsService
+    FilterHousingUnitsGetRequestParameters, FilterHousingUnits, FullHousingUnitResponse
+from application.rest_api.housing_units.services import HousingUnitsDataIngestionService, FilterHousingUnitsService, \
+    RetrieveHousingUnitService
 from application.rest_api.task_status.schemas import TaskStatus
 
 from application.users.enums import Group
@@ -75,3 +76,29 @@ async def get_housing_units(
         num_units_min=filter_housing_units_get_request_parameters.num_units_min,
         num_units_max=filter_housing_units_get_request_parameters.num_units_max
     )
+
+
+@router.get(
+    "/housing-units/{housing_unit_id}",
+    dependencies=[Depends(BearerJWTAuthorizationService(permission_groups=[Group.customer, Group.admin]))],
+    response_description="Get Housing Unit endpoint.",
+    response_model=FullHousingUnitResponse,
+    status_code=200
+)
+@inject
+async def get_housing_unit(
+        housing_unit_id: str,
+        retrieve_housing_unit_service: RetrieveHousingUnitService = Depends(
+            Provide[HousingUnitsContainer.retrieve_housing_unit_service]
+        )
+):
+    """
+    Controller for returning the housing unit by id.
+
+    :param housing_unit_id: The provided housing unit id.
+    :param retrieve_housing_unit_service:  The service responsible for retrieving and returning the HousingUnit
+     by uuid from the HousingUnit table.
+
+    :return: The filtered HousingUnits.
+    """
+    return await retrieve_housing_unit_service.apply(uuid=housing_unit_id)

@@ -88,3 +88,32 @@ class FilterHousingUnitsService:
             housing_units=housing_units,
             total=len(housing_units)
         )
+
+
+class RetrieveHousingUnitService:
+
+    def __init__(
+            self,
+            housing_units_repository: HousingUnitsRepository,
+    ) -> None:
+        self._housing_units_repository: HousingUnitsRepository = housing_units_repository
+
+    async def apply(
+            self,
+            uuid: str = None,
+    ) -> HousingUnit:
+        """
+        Service that retrieves the HousingUnit based on the provided id.
+
+        :param uuid: The Housing Unit uuid.
+
+        :return: The Housing Units retrieved from the provided uuid.
+
+        :raises InvalidNumUnitsErrors: When the num_units_max is smaller than num_units_min.
+        """
+        if not uuid:
+            raise InvalidArgumentError("The uuid is not provided.")
+
+        housing_unit: HousingUnit = await self._housing_units_repository.get_by_uuid(uuid=uuid)
+
+        return housing_unit

@@ -176,3 +176,86 @@ async def test_filter_housing_units_get_request_raise_error_when_num_units_min_i
         "Detail": "The provided number of maximum units can't be smaller than the number of minimum units",
         "Type": "ValidationError"
     }
+
+
+@pytest.mark.asyncio
+async def test_retrieve_housing_unit_get_request(
+        populate_users, populate_housing_units, stub_housing_units, admin_jwt_token
+):
+    response = client.get(
+        "/housing-units/{}".format(stub_housing_units[0].uuid),
+        headers={"Authorization": "Bearer {}".format(admin_jwt_token)}
+    )
+    assert response.status_code == 200
+    response_json = response.json()
+    assert response_json == {
+        'uuid': stub_housing_units[0].uuid, 'project_id': 'project id 1', 'street_name': 'street name test 1',
+        'borough': 'Queens', 'postcode': 1, 'reporting_construction_type': 'construction type test 1',
+        'total_units': 2, 'project_name': None, 'project_start_date': None, 'project_completion_date': None,
+        'building_id': None, 'house_number': None, 'bbl': None, 'bin': None, 'community_board': None,
+        'council_district': None, 'census_tract': None, 'neighborhood_tabulation_area': None, 'latitude': None,
+        'longitude': None, 'latitude_internal': None, 'longitude_internal': None, 'building_completion_date': None,
+        'extended_affordability_status': None, 'prevailing_wage_status': None, 'extremely_low_income_units': None,
+        'very_low_income_units': None, 'low_income_units': None, 'moderate_income_units': None,
+        'middle_income_units': None, 'other_income_units': None, 'studio_units': None, 'unknown_br_units': None,
+        'counted_rental_units': None, 'counted_homeownership_units': None, 'all_counted_units': None
+    }
+
+
+@pytest.mark.asyncio
+async def test_retrieve_housing_unit_get_request_called_by_customer(
+        populate_users, populate_housing_units, stub_housing_units, customer_jwt_token
+):
+    response = client.get(
+        "/housing-units/{}".format(stub_housing_units[0].uuid),
+        headers={"Authorization": "Bearer {}".format(customer_jwt_token)}
+    )
+    assert response.status_code == 200
+    response_json = response.json()
+    assert response_json == {
+        'uuid': stub_housing_units[0].uuid, 'project_id': 'project id 1', 'street_name': 'street name test 1',
+        'borough': 'Queens', 'postcode': 1, 'reporting_construction_type': 'construction type test 1',
+        'total_units': 2, 'project_name': None, 'project_start_date': None, 'project_completion_date': None,
+        'building_id': None, 'house_number': None, 'bbl': None, 'bin': None, 'community_board': None,
+        'council_district': None, 'census_tract': None, 'neighborhood_tabulation_area': None, 'latitude': None,
+        'longitude': None, 'latitude_internal': None, 'longitude_internal': None, 'building_completion_date': None,
+        'extended_affordability_status': None, 'prevailing_wage_status': None, 'extremely_low_income_units': None,
+        'very_low_income_units': None, 'low_income_units': None, 'moderate_income_units': None,
+        'middle_income_units': None, 'other_income_units': None, 'studio_units': None, 'unknown_br_units': None,
+        'counted_rental_units': None, 'counted_homeownership_units': None, 'all_counted_units': None
+    }
+
+
+@pytest.mark.asyncio
+async def test_retrieve_housing_unit_get_request_called_by_admin(
+        populate_users, populate_housing_units, stub_housing_units, admin_jwt_token
+):
+    response = client.get(
+        "/housing-units/{}".format(stub_housing_units[0].uuid),
+        headers={"Authorization": "Bearer {}".format(admin_jwt_token)}
+    )
+    assert response.status_code == 200
+    response_json = response.json()
+    assert response_json == {
+        'uuid': stub_housing_units[0].uuid, 'project_id': 'project id 1', 'street_name': 'street name test 1',
+        'borough': 'Queens', 'postcode': 1, 'reporting_construction_type': 'construction type test 1',
+        'total_units': 2, 'project_name': None, 'project_start_date': None, 'project_completion_date': None,
+        'building_id': None, 'house_number': None, 'bbl': None, 'bin': None, 'community_board': None,
+        'council_district': None, 'census_tract': None, 'neighborhood_tabulation_area': None, 'latitude': None,
+        'longitude': None, 'latitude_internal': None, 'longitude_internal': None, 'building_completion_date': None,
+        'extended_affordability_status': None, 'prevailing_wage_status': None, 'extremely_low_income_units': None,
+        'very_low_income_units': None, 'low_income_units': None, 'moderate_income_units': None,
+        'middle_income_units': None, 'other_income_units': None, 'studio_units': None, 'unknown_br_units': None,
+        'counted_rental_units': None, 'counted_homeownership_units': None, 'all_counted_units': None
+    }
+
+
+@pytest.mark.asyncio
+async def test_retrieve_housing_unit_get_request_raise_authorization_error_when_jwt_not_provided(
+        populate_users, populate_housing_units, stub_housing_units
+):
+    response = client.get(
+        "/housing-units/{}".format(stub_housing_units[0].uuid),
+    )
+    assert response.status_code == 403
+    assert response.json() == {'detail': 'Not authenticated'}
