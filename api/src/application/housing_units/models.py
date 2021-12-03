@@ -278,3 +278,56 @@ class HousingUnit(HousingUnitsDBBaseModel):
             all_counted_units=int(dictionary['all_counted_units']) if not math.isnan(dictionary['all_counted_units']) else None,
             total_units=int(dictionary['total_units']) if not math.isnan(dictionary['total_units']) else None
         )
+
+    def __eq__(self, other) -> bool:
+        """
+        Asserting equality between two different HousingUnit instances.
+
+        :param other: The instance we want to compare with.
+
+        :return: True if they are have equal fields false otherwise.
+        """
+        if isinstance(other, HousingUnit):
+            return self.project_id == other.project_id \
+                and self.project_name == other.project_name \
+                and self.project_start_date == other.project_start_date \
+                and self.project_completion_date == other.project_completion_date \
+                and self.building_id == other.building_id \
+                and self.house_number == other.house_number \
+                and self.street_name == other.street_name \
+                and self.borough == other.borough \
+                and self.postcode == other.postcode \
+                and self.bbl == other.bbl \
+                and self.bin == other.bin \
+                and self.community_board == other.community_board \
+                and self.council_district == other.council_district \
+                and self.census_tract == other.census_tract \
+                and self.neighborhood_tabulation_area == other.neighborhood_tabulation_area \
+                and self.latitude == other.latitude \
+                and self.longitude == other.longitude \
+                and self.latitude_internal == other.latitude_internal \
+                and self.longitude_internal == other.longitude_internal \
+                and self.building_completion_date == other.building_completion_date \
+                and self.reporting_construction_type == other.reporting_construction_type \
+                and self.extended_affordability_status == other.extended_affordability_status \
+                and self.prevailing_wage_status == other.prevailing_wage_status \
+                and self.extremely_low_income_units == other.extremely_low_income_units \
+                and self.very_low_income_units == other.very_low_income_units \
+                and self.low_income_units == other.low_income_units \
+                and self.moderate_income_units == other.moderate_income_units \
+                and self.middle_income_units == other.middle_income_units \
+                and self.other_income_units == other.other_income_units \
+                and self.studio_units == other.studio_units \
+                and self._1_br_units == other._1_br_units \
+                and self._2_br_units == other._2_br_units \
+                and self._3_br_units == other._3_br_units \
+                and self._4_br_units == other._4_br_units \
+                and self._5_br_units == other._5_br_units \
+                and self._6_br_units == other._6_br_units \
+                and self.unknown_br_units == other.unknown_br_units \
+                and self.counted_rental_units == other.counted_rental_units \
+                and self.counted_homeownership_units == other.counted_homeownership_units \
+                and self.all_counted_units == other.all_counted_units \
+                and self.total_units == other.total_units
+
+        return False

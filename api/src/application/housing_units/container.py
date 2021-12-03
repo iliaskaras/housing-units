@@ -3,7 +3,7 @@ from dependency_injector.providers import Singleton
 
 from application.housing_units.repositories import HousingUnitsRepository
 from application.infrastructure.database.database import DatabaseEngineWrapper
-from application.rest_api.housing_units.services import HousingUnitsDataIngestionService
+from application.rest_api.housing_units.services import HousingUnitsDataIngestionService, FilterHousingUnitsService
 from application.task_status.services import GetTaskStatusReportService
 
 
@@ -26,4 +26,9 @@ class HousingUnitsContainer(containers.DeclarativeContainer):
     housing_units_data_ingestion_service: Singleton = providers.Singleton(
         HousingUnitsDataIngestionService,
         get_task_status_report_service=GetTaskStatusReportService()
+    )
+
+    filter_housing_units_service: Singleton = providers.Singleton(
+        FilterHousingUnitsService,
+        housing_units_repository=housing_units_repository,
     )

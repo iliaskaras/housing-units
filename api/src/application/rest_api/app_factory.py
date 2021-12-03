@@ -4,6 +4,7 @@ from application.authentication.container import AuthenticationContainer
 from application.housing_units.container import HousingUnitsContainer
 from application.infrastructure.configurations.models import Configuration
 from application.infrastructure.error.errors import InvalidArgumentError
+from application.infrastructure.error.rest_api_error_handler import initialize_rest_api_error_handlers
 from application.infrastructure.loggers.loggers import HousingUnitsAppLoggerFactory
 from application.rest_api.users import controllers as user_route
 from application.rest_api.authentication import controllers as authenticate_route
@@ -52,6 +53,9 @@ def create_housing_units_app(name: str) -> FastAPI:
 
     # Initialize Rest API Routes.
     init_application_routes(rest_api=rest_api)
+
+    # Initialize Rest API Error handler.
+    initialize_rest_api_error_handlers(rest_api=rest_api)
 
     logger.info("Housing Units REST API started.")
 

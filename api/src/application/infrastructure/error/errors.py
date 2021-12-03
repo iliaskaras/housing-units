@@ -1,5 +1,7 @@
 class HousingUnitBaseError(Exception):
-    pass
+    message: str = None
+    error_type: str = None
+    status_code: int = 400
 
 
 class ArgumentError(HousingUnitBaseError):

@@ -21,3 +21,17 @@ deploy-local:
 down-services:
 		@echo "======================= Stopping Local Deployment Running Services==============================="
 		sudo docker-compose -f api/devops/docker-compose.yml down
+
+run-unit-tests:
+		pytest -v -p no:warnings api/src/tests/application/unit_tests
+
+run-integration-tests:
+		pytest -v -p no:warnings api/src/tests/application/integration_tests
+
+run-functional-tests:
+		pytest -v -p no:warnings api/src/tests/application/functional_tests
+
+run-tests:
+		pytest -v -p no:warnings api/src/tests/application/functional_tests
+		pytest -v -p no:warnings api/src/tests/application/unit_tests
+		pytest -v -p no:warnings api/src/tests/application/integration_tests

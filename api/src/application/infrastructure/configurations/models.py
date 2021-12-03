@@ -125,10 +125,10 @@ class Configuration:
         logger.info("Initializing Housing Units API test configurations.")
 
         return Configuration(
-            postgresql_connection_uri='',
-            async_postgresql_connection_uri='',
-            celery_broker_url="redis://localhost:6379",
-            celery_result_backend="redis://localhost:6379",
+            postgresql_connection_uri=os.getenv("POSTGRESQL_CONNECTION_URI"),
+            async_postgresql_connection_uri=os.getenv("ASYNC_POSTGRESQL_CONNECTION_URI"),
+            celery_broker_url=os.getenv("CELERY_BROKER_URL"),
+            celery_result_backend=os.getenv("CELERY_RESULT_BACKEND"),
             secret=os.getenv("SECRET"),
             socrata_app_token=os.getenv("SOCRATA_APP_TOKEN"),
             algorithm=os.getenv("ALGORITHM", "HS256"),
