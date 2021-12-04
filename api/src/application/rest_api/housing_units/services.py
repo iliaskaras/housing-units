@@ -1,5 +1,7 @@
 from typing import Optional, List
 
+from fastapi import HTTPException
+
 from application.housing_units.models import HousingUnit
 from application.housing_units.repositories import HousingUnitsRepository
 from application.infrastructure.error.errors import InvalidArgumentError
@@ -115,6 +117,9 @@ class RetrieveHousingUnitService:
             raise InvalidArgumentError("The uuid is not provided.")
 
         housing_unit: HousingUnit = await self._housing_units_repository.get_by_uuid(uuid=uuid)
+
+        if not housing_unit:
+            raise HTTPException(status_code=404, detail="Housing Unit not found.")
 
         return housing_unit
 
@@ -297,6 +302,9 @@ class UpdateHousingUnitService:
             raise InvalidArgumentError("The uuid is not provided.")
 
         housing_unit: HousingUnit = await self._housing_units_repository.get_by_uuid(uuid=uuid)
+
+        if not housing_unit:
+            raise HTTPException(status_code=404, detail="Housing Unit not found.")
 
         housing_unit.project_id = housing_unit_body.project_id
         housing_unit.project_name = housing_unit_body.project_name

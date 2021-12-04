@@ -94,3 +94,13 @@ services:
       - housing-units-api
       - housing-units-api-redis
       - housing-units-api-worker
+  housing-units-api-nginx:
+    image: "housing-units-api-nginx:0.1"
+    container_name: housing-units-api-nginx
+    restart: always
+    networks:
+      - housing-units-api-network
+    ports:
+      - "0.0.0.0:80:80"
+    depends_on:
+      - housing-units-api
