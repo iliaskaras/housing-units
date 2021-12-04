@@ -1,0 +1,425 @@
+{
+	"info": {
+		"_postman_id": "b7202ab7-b506-49a1-b524-dc132a21ae2e",
+		"name": "Housing Units",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Get User",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiYWRtaW5fdXNlckBhZG1pbi5jb20iLCJncm91cCI6ImFkbWluIiwiZXhwaXJlcyI6MTYzODYxNTkzMC4yMzc1OTg3fQ.OYQ4I9LApsecuEuzTjsbeLeAlmX9FHToWr9N1GN4Ioc",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "127.0.0.1:80/active-users",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "80",
+							"path": [
+								"active-users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Authenticate User Login Admin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"admin_user@admin.com\",\n    \"password\":\"123456\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "127.0.0.1:80/login",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "80",
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Authenticate User Login Customer",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"customer_user@customer.com\",\n    \"password\":\"123456\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "127.0.0.1:80/login",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "80",
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Housing Units",
+			"item": [
+				{
+					"name": "HBDBuilding Data Ingestion",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiYWRtaW5fdXNlckBhZG1pbi5jb20iLCJncm91cCI6ImFkbWluIiwiZXhwaXJlcyI6MTYzODYwMzU5NS4zMzIxODUzfQ.70x8Han4GL4Q_1Y6X02A0cN1-jzSj6wkVemf5-76OyU"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "127.0.0.1:80/housing-units/data-ingestion/",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "80",
+							"path": [
+								"housing-units",
+								"data-ingestion",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Housing Units Filtering",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiYWRtaW5fdXNlckBhZG1pbi5jb20iLCJncm91cCI6ImFkbWluIiwiZXhwaXJlcyI6MTYzODYxNTkzMC4yMzc1OTg3fQ.OYQ4I9LApsecuEuzTjsbeLeAlmX9FHToWr9N1GN4Ioc"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "127.0.0.1:80/housing-units?num_units_min=1&num_units_max=100&borough=Queens&street_name=71 AVENUE",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "80",
+							"path": [
+								"housing-units"
+							],
+							"query": [
+								{
+									"key": "num_units_min",
+									"value": "1"
+								},
+								{
+									"key": "num_units_max",
+									"value": "100"
+								},
+								{
+									"key": "borough",
+									"value": "Queens"
+								},
+								{
+									"key": "street_name",
+									"value": "71 AVENUE"
+								},
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Housing Units Retrieve",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiYWRtaW5fdXNlckBhZG1pbi5jb20iLCJncm91cCI6ImFkbWluIiwiZXhwaXJlcyI6MTYzODYwMzU5NS4zMzIxODUzfQ.70x8Han4GL4Q_1Y6X02A0cN1-jzSj6wkVemf5-76OyU"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "127.0.0.1:8000/housing-units/df1a19a8-acfe-4671-a99b-2e6ab4119939",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"housing-units",
+								"df1a19a8-acfe-4671-a99b-2e6ab4119939"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Housing Units Retrieve Copy",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiYWRtaW5fdXNlckBhZG1pbi5jb20iLCJncm91cCI6ImFkbWluIiwiZXhwaXJlcyI6MTYzODYwMzU5NS4zMzIxODUzfQ.70x8Han4GL4Q_1Y6X02A0cN1-jzSj6wkVemf5-76OyU"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "127.0.0.1:80/housing-units/df1a19a8-acfe-4671-a99b-2e6ab4119939",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "80",
+							"path": [
+								"housing-units",
+								"df1a19a8-acfe-4671-a99b-2e6ab4119939"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Housing Units Create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiYWRtaW5fdXNlckBhZG1pbi5jb20iLCJncm91cCI6ImFkbWluIiwiZXhwaXJlcyI6MTYzODYwMzU5NS4zMzIxODUzfQ.70x8Han4GL4Q_1Y6X02A0cN1-jzSj6wkVemf5-76OyU"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"project_id\": \"69763\",\n    \"street_name\": \"71 AVENUE\",\n    \"borough\": \"Queens\",\n    \"postcode\": 11365,\n    \"reporting_construction_type\": \"Preservation\",\n    \"total_units\": 39,\n    \"project_name\": \"ELECTCHESTER HOUSING CO 1.HRP.FY21\",\n    \"project_start_date\": \"2021-06-30T00:00:00\",\n    \"project_completion_date\": null,\n    \"building_id\": 810604,\n    \"house_number\": \"159-21\",\n    \"bbl\": 4067890015,\n    \"bin\": 4451567,\n    \"community_board\": \"QN-08\",\n    \"council_district\": 810604,\n    \"census_tract\": \"122701\",\n    \"neighborhood_tabulation_area\": \"QN38\",\n    \"latitude\": 40.730363,\n    \"longitude\": -73.809283,\n    \"latitude_internal\": 40.73116,\n    \"longitude_internal\": -73.808108,\n    \"building_completion_date\": null,\n    \"extended_affordability_status\": \"No\",\n    \"prevailing_wage_status\": \"Non Prevailing Wage\",\n    \"extremely_low_income_units\": 0,\n    \"very_low_income_units\": 32,\n    \"low_income_units\": 7,\n    \"moderate_income_units\": 0,\n    \"middle_income_units\": 0,\n    \"other_income_units\": 0,\n    \"studio_units\": 0,\n    \"one_br_units\": 7,\n    \"two_br_units\": 26,\n    \"three_br_units\": 6,\n    \"four_br_units\": 0,\n    \"five_br_units\": 0,\n    \"six_br_units\": 0,\n    \"unknown_br_units\": 0,\n    \"counted_rental_units\": 0,\n    \"counted_homeownership_units\": 39,\n    \"all_counted_units\": 39\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "127.0.0.1:80/housing-units/",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "80",
+							"path": [
+								"housing-units",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Housing Units Put",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiYWRtaW5fdXNlckBhZG1pbi5jb20iLCJncm91cCI6ImFkbWluIiwiZXhwaXJlcyI6MTYzODYwMzU5NS4zMzIxODUzfQ.70x8Han4GL4Q_1Y6X02A0cN1-jzSj6wkVemf5-76OyU"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"project_id\": \"69763\",\n    \"street_name\": \"71 AVENUE\",\n    \"borough\": \"Queens\",\n    \"postcode\": 11365,\n    \"reporting_construction_type\": \"Preservation\",\n    \"total_units\": 39,\n    \"project_name\": \"ELECTCHESTER HOUSING CO 1.HRP.FY21\",\n    \"project_start_date\": \"2021-06-30T00:00:00\",\n    \"project_completion_date\": null,\n    \"building_id\": 810604,\n    \"house_number\": \"159-21\",\n    \"bbl\": 4067890015,\n    \"bin\": 4451567,\n    \"community_board\": \"QN-08\",\n    \"council_district\": 810604,\n    \"census_tract\": \"122701\",\n    \"neighborhood_tabulation_area\": \"QN38\",\n    \"latitude\": 40.730363,\n    \"longitude\": -73.809283,\n    \"latitude_internal\": 40.73116,\n    \"longitude_internal\": -73.808108,\n    \"building_completion_date\": null,\n    \"extended_affordability_status\": \"No\",\n    \"prevailing_wage_status\": \"Non Prevailing Wage\",\n    \"extremely_low_income_units\": 0,\n    \"very_low_income_units\": 32,\n    \"low_income_units\": 7,\n    \"moderate_income_units\": 0,\n    \"middle_income_units\": 0,\n    \"other_income_units\": 0,\n    \"studio_units\": 0,\n    \"one_br_units\": 7,\n    \"two_br_units\": 26,\n    \"three_br_units\": 6,\n    \"four_br_units\": 0,\n    \"five_br_units\": 0,\n    \"six_br_units\": 0,\n    \"unknown_br_units\": 0,\n    \"counted_rental_units\": 0,\n    \"counted_homeownership_units\": 39,\n    \"all_counted_units\": 39\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "127.0.0.1:80/housing-units/df1a19a8-acfe-4671-a99b-2e6ab4119939",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "80",
+							"path": [
+								"housing-units",
+								"df1a19a8-acfe-4671-a99b-2e6ab4119939"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "tasks",
+			"item": [
+				{
+					"name": "Get Task Status Copy",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiYWRtaW5fdXNlckBhZG1pbi5jb20iLCJncm91cCI6ImFkbWluIiwiZXhwaXJlcyI6MTYzODYxNTkzMC4yMzc1OTg3fQ.OYQ4I9LApsecuEuzTjsbeLeAlmX9FHToWr9N1GN4Ioc"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "127.0.0.1:80/task-status/7d711a1c-3b8c-43f5-9c5e-87171fb15a25",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "80",
+							"path": [
+								"task-status",
+								"7d711a1c-3b8c-43f5-9c5e-87171fb15a25"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
