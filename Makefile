@@ -16,6 +16,8 @@ deploy-local:
 		sudo docker tag housing-units-api-worker housing-units-api-worker:0.1
 		sudo docker build -f api/devops/api/Dockerfile -t housing-units-api .
 		sudo docker tag housing-units-api housing-units-api:0.1
+		sudo docker build -f api/devops/nginx/Dockerfile -t housing-units-api-nginx api/devops/nginx/
+		sudo docker tag housing-units-api-nginx housing-units-api-nginx:0.1
 		sudo docker-compose -f api/devops/docker-compose.yml up -d
 
 down-services:

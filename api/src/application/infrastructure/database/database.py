@@ -56,7 +56,7 @@ class DatabaseEngineWrapper:
         if not cls.DB_ENGINE:
             engine = create_engine(
                 url=config.postgresql_connection_uri,
-                echo=True
+                echo=False
             )
             session = sessionmaker(engine, expire_on_commit=False)
             cls.DB_ENGINE = DBEngine(

@@ -183,6 +183,7 @@ async def delete_housing_unit(
     """
     await delete_housing_unit_service.apply(uuid=housing_unit_id)
 
+    print()
     return {
         "uuid": housing_unit_id,
         "status": "deleted"
