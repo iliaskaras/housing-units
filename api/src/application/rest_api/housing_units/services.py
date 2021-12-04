@@ -343,3 +343,28 @@ class UpdateHousingUnitService:
         self._housing_unit_fields_sanity_check_service.apply(housing_unit=housing_unit)
 
         return await self._housing_units_repository.save(housing_unit=housing_unit)
+
+
+class DeleteHousingUnitService:
+
+    def __init__(
+            self,
+            housing_units_repository: HousingUnitsRepository,
+    ) -> None:
+        self._housing_units_repository: HousingUnitsRepository = housing_units_repository
+
+    async def apply(
+            self,
+            uuid: str = None,
+    ) -> None:
+        """
+        Service that deletes the HousingUnit based on the provided id.
+
+        :param uuid: The Housing Unit uuid.
+
+        :raises InvalidArgumentError: If the uuid is not provided.
+        """
+        if not uuid:
+            raise InvalidArgumentError("The uuid is not provided.")
+
+        await self._housing_units_repository.delete(uuid=uuid)
