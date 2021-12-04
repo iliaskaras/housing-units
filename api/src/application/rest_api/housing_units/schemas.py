@@ -15,44 +15,44 @@ class DataIngestionPostRequestBody:
 
 @dataclass
 class HousingUnitPostRequestBody:
-    one_br_units: Optional[int] = None
-    two_br_units: Optional[int] = None
-    three_br_units: Optional[int] = None
-    four_br_units: Optional[int] = None
-    five_br_units: Optional[int] = None
-    six_br_units: Optional[int] = None
+    one_br_units: Optional[int] = Field(default=0)
+    two_br_units: Optional[int] = Field(default=0)
+    three_br_units: Optional[int] = Field(default=0)
+    four_br_units: Optional[int] = Field(default=0)
+    five_br_units: Optional[int] = Field(default=0)
+    six_br_units: Optional[int] = Field(default=0)
     project_name: Optional[str] = None
     project_id: str = Field()
     street_name: Optional[str] = None
-    building_id: Optional[int] = None
+    building_id: Optional[int] = Field(default=0)
     house_number: Optional[str] = None
-    bbl: Optional[int] = None
-    bin: Optional[int] = None
+    bbl: Optional[int] = Field(default=0)
+    bin: Optional[int] = Field(default=0)
     community_board: Optional[str] = None
-    council_district: Optional[int] = None
+    council_district: Optional[int] = Field(default=0)
     census_tract: Optional[str] = None
     neighborhood_tabulation_area: Optional[str] = None
-    latitude: Optional[float] = None
-    longitude: Optional[float] = None
-    latitude_internal: Optional[float] = None
-    longitude_internal: Optional[float] = None
+    latitude: Optional[float] = Field(default=0.0)
+    longitude: Optional[float] = Field(default=0.0)
+    latitude_internal: Optional[float] = Field(default=0.0)
+    longitude_internal: Optional[float] = Field(default=0.0)
     extended_affordability_status: Optional[str] = None
     prevailing_wage_status: Optional[str] = None
-    extremely_low_income_units: Optional[int] = None
-    very_low_income_units: Optional[int] = None
-    low_income_units: Optional[int] = None
-    moderate_income_units: Optional[int] = None
-    middle_income_units: Optional[int] = None
-    other_income_units: Optional[int] = None
-    studio_units: Optional[int] = None
-    unknown_br_units: Optional[int] = None
-    counted_rental_units: Optional[int] = None
-    counted_homeownership_units: Optional[int] = None
-    all_counted_units: Optional[int] = None
-    borough: Optional[str] = None
-    postcode: Optional[int] = None
+    extremely_low_income_units: Optional[int] = Field(default=0)
+    very_low_income_units: Optional[int] = Field(default=0)
+    low_income_units: Optional[int] = Field(default=0)
+    moderate_income_units: Optional[int] = Field(default=0)
+    middle_income_units: Optional[int] = Field(default=0)
+    other_income_units: Optional[int] = Field(default=0)
+    studio_units: Optional[int] = Field(default=0)
+    unknown_br_units: Optional[int] = Field(default=0)
+    counted_rental_units: Optional[int] = Field(default=0)
+    counted_homeownership_units: Optional[int] = Field(default=0)
+    all_counted_units: Optional[int] = Field(default=0)
+    borough: Optional[str] = Field(default=0)
+    postcode: Optional[int] = Field(default=0)
     reporting_construction_type: Optional[str] = None
-    total_units: Optional[int] = None
+    total_units: Optional[int] = Field(default=0)
     project_start_date: Optional[datetime] = None
     project_completion_date: Optional[datetime] = None
     building_completion_date: Optional[datetime] = None
