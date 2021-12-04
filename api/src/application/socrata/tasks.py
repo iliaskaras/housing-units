@@ -40,10 +40,7 @@ def housing_unit_raw_data_ingestion_task(hbd_dataset_id: str = 'hg8x-zxpr', rese
     housing_units: List[HousingUnit] = []
     for _chunk in socrata_client.housing_unit_dataset_generator(results_df):
         for index, row in _chunk.T.to_dict().items():
-            try:
-                housing_units.append(HousingUnit.from_dict(row))
-            except Exception as ex:
-                print(ex)
+            housing_units.append(HousingUnit.from_dict(row))
 
         housing_units_repository.bulk_save(housing_units)
 

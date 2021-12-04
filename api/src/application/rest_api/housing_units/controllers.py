@@ -6,7 +6,7 @@ from application.housing_units.container import HousingUnitsContainer
 from application.rest_api.housing_units.schemas import DataIngestionPostRequestBody, \
     FilterHousingUnitsGetRequestParameters, FilterHousingUnits, FullHousingUnitResponse, HousingUnitPostRequestBody
 from application.rest_api.housing_units.services import HousingUnitsDataIngestionService, FilterHousingUnitsService, \
-    RetrieveHousingUnitService, CreateHousingUnitService
+    RetrieveHousingUnitService, CreateHousingUnitService, UpdateHousingUnitService
 from application.rest_api.task_status.schemas import TaskStatus
 
 from application.users.enums import Group
@@ -46,12 +46,12 @@ async def housing_units_data_ingestion(
 @router.get(
     "/housing-units",
     dependencies=[Depends(BearerJWTAuthorizationService(permission_groups=[Group.customer, Group.admin]))],
-    response_description="Get Housing Units endpoint.",
+    response_description="Retrieving Housing Units endpoint.",
     response_model=FilterHousingUnits,
     status_code=200
 )
 @inject
-async def get_housing_units(
+async def retrieve_housing_units(
         filter_housing_units_get_request_parameters: FilterHousingUnitsGetRequestParameters = Depends(
             FilterHousingUnitsGetRequestParameters
         ),
@@ -81,12 +81,12 @@ async def get_housing_units(
 @router.get(
     "/housing-units/{housing_unit_id}",
     dependencies=[Depends(BearerJWTAuthorizationService(permission_groups=[Group.customer, Group.admin]))],
-    response_description="Get Housing Unit endpoint.",
+    response_description="Retrieving Housing Unit endpoint.",
     response_model=FullHousingUnitResponse,
     status_code=200
 )
 @inject
-async def get_housing_unit(
+async def retrieve_housing_unit(
         housing_unit_id: str,
         retrieve_housing_unit_service: RetrieveHousingUnitService = Depends(
             Provide[HousingUnitsContainer.retrieve_housing_unit_service]
@@ -95,7 +95,7 @@ async def get_housing_unit(
     """
     Controller for returning the housing unit by id.
 
-    :param housing_unit_id: The provided housing unit id.
+    :param housing_unit_id: The provided housing unit id that is to be retrieved.
     :param retrieve_housing_unit_service:  The service responsible for retrieving and returning the HousingUnit
      by uuid from the HousingUnit table.
 
@@ -107,12 +107,12 @@ async def get_housing_unit(
 @router.post(
     "/housing-units/",
     dependencies=[Depends(BearerJWTAuthorizationService(permission_groups=[Group.customer, Group.admin]))],
-    response_description="Post Housing Unit endpoint.",
+    response_description="Creating Housing Unit endpoint.",
     response_model=FullHousingUnitResponse,
     status_code=200
 )
 @inject
-async def post_housing_unit(
+async def create_housing_unit(
         housing_unit_post_request_body: HousingUnitPostRequestBody,
         create_housing_unit_service: CreateHousingUnitService = Depends(
             Provide[HousingUnitsContainer.create_housing_unit_service]
@@ -127,3 +127,33 @@ async def post_housing_unit(
     :return: The created HousingUnits.
     """
     return await create_housing_unit_service.apply(housing_unit_body=housing_unit_post_request_body)
+
+
+@router.put(
+    "/housing-units/{housing_unit_id}",
+    dependencies=[Depends(BearerJWTAuthorizationService(permission_groups=[Group.customer, Group.admin]))],
+    response_description="Update Housing Unit endpoint.",
+    response_model=FullHousingUnitResponse,
+    status_code=200
+)
+@inject
+async def update_housing_unit(
+        housing_unit_id: str,
+        housing_unit_put_request_body: HousingUnitPostRequestBody,
+        update_housing_unit_service: UpdateHousingUnitService = Depends(
+            Provide[HousingUnitsContainer.update_housing_unit_service]
+        )
+):
+    """
+    Controller for updating a HousingUnit entry.
+
+    :param housing_unit_id: The provided housing unit id that is to be updated.
+    :param housing_unit_put_request_body: The housing unit body.
+    :param update_housing_unit_service:  The service responsible for updating the HousingUnit.
+
+    :return: The updated HousingUnits.
+    """
+    return await update_housing_unit_service.apply(
+        housing_unit_body=housing_unit_put_request_body,
+        uuid=housing_unit_id
+    )
