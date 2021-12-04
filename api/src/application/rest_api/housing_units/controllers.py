@@ -6,7 +6,7 @@ from application.housing_units.container import HousingUnitsContainer
 from application.rest_api.housing_units.schemas import DataIngestionPostRequestBody, \
     FilterHousingUnitsGetRequestParameters, FilterHousingUnits, FullHousingUnitResponse, HousingUnitPostRequestBody
 from application.rest_api.housing_units.services import HousingUnitsDataIngestionService, FilterHousingUnitsService, \
-    RetrieveHousingUnitService, CreateHousingUnitService, UpdateHousingUnitService
+    RetrieveHousingUnitService, CreateHousingUnitService, UpdateHousingUnitService, DeleteHousingUnitService
 from application.rest_api.task_status.schemas import TaskStatus
 
 from application.users.enums import Group
@@ -51,7 +51,7 @@ async def housing_units_data_ingestion(
     status_code=200
 )
 @inject
-async def retrieve_housing_units(
+async def filter_housing_units(
         filter_housing_units_get_request_parameters: FilterHousingUnitsGetRequestParameters = Depends(
             FilterHousingUnitsGetRequestParameters
         ),
@@ -99,7 +99,7 @@ async def retrieve_housing_unit(
     :param retrieve_housing_unit_service:  The service responsible for retrieving and returning the HousingUnit
      by uuid from the HousingUnit table.
 
-    :return: The filtered HousingUnits.
+    :return: The found HousingUnit.
     """
     return await retrieve_housing_unit_service.apply(uuid=housing_unit_id)
 
@@ -157,3 +157,33 @@ async def update_housing_unit(
         housing_unit_body=housing_unit_put_request_body,
         uuid=housing_unit_id
     )
+
+
+@router.delete(
+    "/housing-units/{housing_unit_id}",
+    dependencies=[Depends(BearerJWTAuthorizationService(permission_groups=[Group.customer, Group.admin]))],
+    response_description="Delete Housing Unit endpoint.",
+    status_code=200
+)
+@inject
+async def delete_housing_unit(
+        housing_unit_id: str,
+        delete_housing_unit_service: DeleteHousingUnitService = Depends(
+            Provide[HousingUnitsContainer.delete_housing_unit_service]
+        )
+):
+    """
+    Controller for deleting the housing unit by id.
+
+    :param housing_unit_id: The provided housing unit id that is to be retrieved.
+    :param delete_housing_unit_service:  The service responsible for deleting the HousingUnit
+     by uuid from the HousingUnit table.
+
+    :return: The deleted HousingUnit.
+    """
+    await delete_housing_unit_service.apply(uuid=housing_unit_id)
+
+    return {
+        "uuid": housing_unit_id,
+        "status": "deleted"
+    }

@@ -39,36 +39,36 @@ async def test_filter_housing_units_get_request(
             'reporting_construction_type': 'construction type test 5', 'total_units': 10
         },
         {
-            'project_id': 'project id 6', 'street_name': 'street name test 6', 'borough': 'Queens', 'postcode': 1,
-            'reporting_construction_type': 'construction type test 6', 'total_units': 12
+            'project_id': 'project id 6', 'street_name': 'street name test 1', 'borough': 'Queens', 'postcode': 1,
+            'reporting_construction_type': 'construction type test 1', 'total_units': 12
         },
         {
-            'project_id': 'project id 7', 'street_name': 'street name test 7', 'borough': 'Brooklyn', 'postcode': 2,
-            'reporting_construction_type': 'construction type test 7', 'total_units': 14
+            'project_id': 'project id 7', 'street_name': 'street name test 2', 'borough': 'Brooklyn', 'postcode': 2,
+            'reporting_construction_type': 'construction type test 2', 'total_units': 14
         },
         {
-            'project_id': 'project id 11', 'street_name': 'street name test 11', 'borough': 'Queens', 'postcode': 1,
-            'reporting_construction_type': 'construction type test 11', 'total_units': 16
+            'project_id': 'project id 11', 'street_name': 'street name test 1', 'borough': 'Queens', 'postcode': 1,
+            'reporting_construction_type': 'construction type test 1', 'total_units': 16
         },
         {
-            'project_id': 'project id 8', 'street_name': 'street name test 8', 'borough': 'Staten Island',
-            'postcode': 3, 'reporting_construction_type': 'construction type test 8', 'total_units': 16
+            'project_id': 'project id 8', 'street_name': 'street name test 3', 'borough': 'Staten Island',
+            'postcode': 3, 'reporting_construction_type': 'construction type test 3', 'total_units': 16
         },
         {
-            'project_id': 'project id 9', 'street_name': 'street name test 9', 'borough': 'Manhattan', 'postcode': 4,
-            'reporting_construction_type': 'construction type test 9', 'total_units': 18
+            'project_id': 'project id 9', 'street_name': 'street name test 4', 'borough': 'Manhattan', 'postcode': 4,
+            'reporting_construction_type': 'construction type test 4', 'total_units': 18
         },
         {
-            'project_id': 'project id 10', 'street_name': 'street name test 10', 'borough': 'Bronx', 'postcode': 5,
-            'reporting_construction_type': 'construction type test 10', 'total_units': 20
+            'project_id': 'project id 10', 'street_name': 'street name test 5', 'borough': 'Bronx', 'postcode': 5,
+            'reporting_construction_type': 'construction type test 5', 'total_units': 20
         },
         {
-            'project_id': 'project id 13', 'street_name': 'street name test 13', 'borough': 'Queens', 'postcode': 1,
-            'reporting_construction_type': 'construction type test 13', 'total_units': 25
+            'project_id': 'project id 12', 'street_name': 'street name test 1', 'borough': 'Queens', 'postcode': 1,
+            'reporting_construction_type': 'construction type test 1', 'total_units': 25
         },
         {
-            'project_id': 'project id 12', 'street_name': 'street name test 12', 'borough': 'Queens', 'postcode': 1,
-            'reporting_construction_type': 'construction type test 12', 'total_units': 25
+            'project_id': 'project id 12', 'street_name': 'street name test 1', 'borough': 'Queens', 'postcode': 1,
+            'reporting_construction_type': 'construction type test 1', 'total_units': 25
         }
     ]
 
@@ -78,7 +78,7 @@ async def test_filter_housing_units_get_request_called_by_customer(
         populate_users, populate_housing_units, stub_housing_units, customer_jwt_token
 ):
     response = client.get(
-        "/housing-units?street_name=street name test 5&num_units_min=10",
+        "/housing-units?street_name=street name test 5&num_units_min=15",
         headers={"Authorization": "Bearer {}".format(customer_jwt_token)},
     )
     assert response.status_code == 200
@@ -88,9 +88,8 @@ async def test_filter_housing_units_get_request_called_by_customer(
     housing_units = get_cleaned_housing_units_response(response_json.get('housing_units'))
     assert housing_units == [
         {
-            'project_id': 'project id 5',
-            'street_name': 'street name test 5', 'borough': 'Bronx', 'postcode': 5,
-            'reporting_construction_type': 'construction type test 5', 'total_units': 10
+            'project_id': 'project id 10', 'street_name': 'street name test 5', 'borough': 'Bronx', 'postcode': 5,
+            'reporting_construction_type': 'construction type test 5', 'total_units': 20
         }
     ]
 
@@ -100,7 +99,7 @@ async def test_filter_housing_units_get_request_called_by_admin(
         populate_users, populate_housing_units, stub_housing_units, admin_jwt_token
 ):
     response = client.get(
-        "/housing-units?street_name=street name test 5&num_units_min=10",
+        "/housing-units?street_name=street name test 5&num_units_min=15",
         headers={"Authorization": "Bearer {}".format(admin_jwt_token)},
     )
     assert response.status_code == 200
@@ -110,9 +109,8 @@ async def test_filter_housing_units_get_request_called_by_admin(
     housing_units = get_cleaned_housing_units_response(response_json.get('housing_units'))
     assert housing_units == [
         {
-            'project_id': 'project id 5',
-            'street_name': 'street name test 5', 'borough': 'Bronx', 'postcode': 5,
-            'reporting_construction_type': 'construction type test 5', 'total_units': 10
+            'project_id': 'project id 10', 'street_name': 'street name test 5', 'borough': 'Bronx', 'postcode': 5,
+            'reporting_construction_type': 'construction type test 5', 'total_units': 20
         }
     ]
 
@@ -584,3 +582,40 @@ async def test_put_housing_unit_request_raise_unprocessable_entity_errors(
              'type': 'value_error.datetime'}
         ]
     }
+
+
+@pytest.mark.asyncio
+async def test_delete_housing_unit_get_request_called_by_customer(
+        populate_users, populate_housing_units, stub_housing_units, customer_jwt_token
+):
+    response = client.delete(
+        "/housing-units/{}".format(stub_housing_units[0].uuid),
+        headers={"Authorization": "Bearer {}".format(customer_jwt_token)}
+    )
+    assert response.status_code == 200
+    response_json = response.json()
+    assert response_json == {'status': 'deleted', 'uuid': stub_housing_units[0].uuid}
+
+
+@pytest.mark.asyncio
+async def test_delete_housing_unit_get_request_called_by_admin(
+        populate_users, populate_housing_units, stub_housing_units, admin_jwt_token
+):
+    response = client.delete(
+        "/housing-units/{}".format(stub_housing_units[0].uuid),
+        headers={"Authorization": "Bearer {}".format(admin_jwt_token)}
+    )
+    assert response.status_code == 200
+    response_json = response.json()
+    assert response_json == {'status': 'deleted', 'uuid': stub_housing_units[0].uuid}
+
+
+@pytest.mark.asyncio
+async def test_delete_housing_unit_get_request_raise_authorization_error_when_jwt_not_provided(
+        populate_users, populate_housing_units, stub_housing_units
+):
+    response = client.get(
+        "/housing-units/{}".format(stub_housing_units[0].uuid),
+    )
+    assert response.status_code == 403
+    assert response.json() == {'detail': 'Not authenticated'}

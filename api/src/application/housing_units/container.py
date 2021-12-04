@@ -4,7 +4,8 @@ from dependency_injector.providers import Singleton
 from application.housing_units.repositories import HousingUnitsRepository
 from application.infrastructure.database.database import DatabaseEngineWrapper
 from application.rest_api.housing_units.services import HousingUnitsDataIngestionService, FilterHousingUnitsService, \
-    RetrieveHousingUnitService, CreateHousingUnitService, UpdateHousingUnitService, HousingUnitFieldsSanityCheckService
+    RetrieveHousingUnitService, CreateHousingUnitService, UpdateHousingUnitService, HousingUnitFieldsSanityCheckService, \
+    DeleteHousingUnitService
 from application.task_status.services import GetTaskStatusReportService
 
 
@@ -51,3 +52,7 @@ class HousingUnitsContainer(containers.DeclarativeContainer):
         housing_unit_fields_sanity_check_service=HousingUnitFieldsSanityCheckService()
     )
 
+    delete_housing_unit_service: Singleton = providers.Singleton(
+        DeleteHousingUnitService,
+        housing_units_repository=housing_units_repository
+    )

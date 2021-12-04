@@ -10,7 +10,8 @@ from application.infrastructure.error.errors import InvalidArgumentError, Housin
 from application.rest_api.housing_units.errors import InvalidNumUnitsError
 from application.rest_api.housing_units.schemas import FilterHousingUnits, HousingUnitPostRequestBody
 from application.rest_api.housing_units.services import FilterHousingUnitsService, HousingUnitsDataIngestionService, \
-    RetrieveHousingUnitService, CreateHousingUnitService, UpdateHousingUnitService, HousingUnitFieldsSanityCheckService
+    RetrieveHousingUnitService, CreateHousingUnitService, UpdateHousingUnitService, HousingUnitFieldsSanityCheckService, \
+    DeleteHousingUnitService
 from application.rest_api.task_status.schemas import TaskStatus
 from application.task_status.services import GetTaskStatusReportService
 
@@ -239,7 +240,6 @@ class TestCreateHousingUnitService:
 
     @pytest.mark.asyncio
     async def test_apply(self, stub_housing_units, housing_unit_repository_input) -> None:
-
         self.mock_housing_units_repository.save.return_value = housing_unit_repository_input
 
         self.mock_housing_units_repository.get_by_uuid.return_value = stub_housing_units[0]
@@ -291,7 +291,6 @@ class TestUpdateHousingUnitService:
 
     @pytest.mark.asyncio
     async def test_apply(self, stub_housing_units, housing_unit_repository_input) -> None:
-
         self.mock_housing_units_repository.get_by_uuid.return_value = housing_unit_repository_input
 
         self.mock_housing_units_repository.save.return_value = housing_unit_repository_input
@@ -321,34 +320,34 @@ class TestHousingUnitFieldsSanityCheckService:
         'expected_error',
         [
             (
-                HousingUnit(
-                    extremely_low_income_units=4,
-                    very_low_income_units=4,
-                    low_income_units=4,
-                    moderate_income_units=0,
-                    middle_income_units=0,
-                    other_income_units=0,
-                    studio_units=0,
-                    one_br_units=4,
-                    two_br_units=4,
-                    three_br_units=4,
-                    four_br_units=0,
-                    five_br_units=0,
-                    six_br_units=0,
-                    unknown_br_units=0,
-                    counted_rental_units=20,
-                    counted_homeownership_units=20,
-                    all_counted_units=11,
-                    total_units=10,
-                ),
-                InvalidNumUnitsError(
-                    "The new total units can't be greater than the counted rental units., The new total number of "
-                    "units can't be greater than the total units., The new total number of units can't be different "
-                    "than the all counted units., The new total number of units can't be smaller than the counted "
-                    "home ownership units., The new total number of income units can't be greater than the total "
-                    "units., The new total number of income units can't be different than the all counted units., "
-                    "The new total number of income units can't be smaller than the counted home ownership units."
-                )
+                    HousingUnit(
+                        extremely_low_income_units=4,
+                        very_low_income_units=4,
+                        low_income_units=4,
+                        moderate_income_units=0,
+                        middle_income_units=0,
+                        other_income_units=0,
+                        studio_units=0,
+                        one_br_units=4,
+                        two_br_units=4,
+                        three_br_units=4,
+                        four_br_units=0,
+                        five_br_units=0,
+                        six_br_units=0,
+                        unknown_br_units=0,
+                        counted_rental_units=20,
+                        counted_homeownership_units=20,
+                        all_counted_units=11,
+                        total_units=10,
+                    ),
+                    InvalidNumUnitsError(
+                        "The new total units can't be greater than the counted rental units., The new total number of "
+                        "units can't be greater than the total units., The new total number of units can't be different "
+                        "than the all counted units., The new total number of units can't be smaller than the counted "
+                        "home ownership units., The new total number of income units can't be greater than the total "
+                        "units., The new total number of income units can't be different than the all counted units., "
+                        "The new total number of income units can't be smaller than the counted home ownership units."
+                    )
             ),
             (
                     None,
@@ -367,3 +366,33 @@ class TestHousingUnitFieldsSanityCheckService:
         assert ex.value.args == expected_error.args
         assert ex.value.error_type == expected_error.error_type
         assert ex.value.message == expected_error.message
+
+
+class TestDeleteHousingUnitService:
+
+    @pytest.fixture(autouse=True)
+    def setup(self) -> None:
+        self.mock_housing_units_repository = AsyncMock()
+
+        self.delete_housing_unit_service = DeleteHousingUnitService(
+            housing_units_repository=self.mock_housing_units_repository
+        )
+
+    @pytest.mark.asyncio
+    async def test_apply_raise_error_when_uuid_not_provided(self) -> None:
+        expected_error: InvalidArgumentError = InvalidArgumentError("The uuid is not provided.")
+
+        with pytest.raises(InvalidArgumentError) as ex:
+            await self.delete_housing_unit_service.apply(
+                uuid=None
+            )
+        assert ex.value.args == expected_error.args
+        assert ex.value.error_type == expected_error.error_type
+        assert ex.value.message == expected_error.message
+
+    @pytest.mark.asyncio
+    async def test_apply(self, stub_housing_units) -> None:
+        self.mock_housing_units_repository.delete.return_value = stub_housing_units[0]
+        await self.delete_housing_unit_service.apply(uuid=stub_housing_units[0].uuid)
+
+        self.mock_housing_units_repository.delete.assert_called_once_with(uuid=stub_housing_units[0].uuid)
