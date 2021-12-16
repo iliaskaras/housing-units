@@ -51,4 +51,4 @@ COPY --chown=housingunitsuser:housingunitsuser "api/src" ${housing_units_api_dir
 WORKDIR ${housing_units_api_directory}
 ENV PYTHONPATH ${housing_units_api_directory}/src
 
-ENTRYPOINT ["uvicorn", "application.main:app", "--host", "0.0.0.0", "--port", "8000"]
+ENTRYPOINT gunicorn --bind :8080 --workers 3 --threads 8 application.main:app --worker-class uvicorn.workers.UvicornH11Worker --preload --timeout 60 --worker-tmp-dir /dev/shm

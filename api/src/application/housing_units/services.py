@@ -5,7 +5,7 @@ from fastapi import HTTPException
 from application.housing_units.models import HousingUnit
 from application.housing_units.repositories import HousingUnitsRepository
 from application.infrastructure.error.errors import InvalidArgumentError
-from application.rest_api.housing_units.errors import InvalidNumUnitsError
+from application.housing_units.errors import InvalidNumUnitsError
 from application.rest_api.housing_units.schemas import FilterHousingUnits, HousingUnitPostRequestBody
 from application.rest_api.task_status.schemas import TaskStatus
 from application.socrata.tasks import housing_unit_raw_data_ingestion_task

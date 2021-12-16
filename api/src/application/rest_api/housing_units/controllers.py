@@ -5,7 +5,7 @@ from application.authentication.utils import BearerJWTAuthorizationService
 from application.housing_units.container import HousingUnitsContainer
 from application.rest_api.housing_units.schemas import DataIngestionPostRequestBody, \
     FilterHousingUnitsGetRequestParameters, FilterHousingUnits, FullHousingUnitResponse, HousingUnitPostRequestBody
-from application.rest_api.housing_units.services import HousingUnitsDataIngestionService, FilterHousingUnitsService, \
+from application.housing_units.services import HousingUnitsDataIngestionService, FilterHousingUnitsService, \
     RetrieveHousingUnitService, CreateHousingUnitService, UpdateHousingUnitService, DeleteHousingUnitService
 from application.rest_api.task_status.schemas import TaskStatus
 
