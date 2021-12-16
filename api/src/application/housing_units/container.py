@@ -3,7 +3,7 @@ from dependency_injector.providers import Singleton
 
 from application.housing_units.repositories import HousingUnitsRepository
 from application.infrastructure.database.database import DatabaseEngineWrapper
-from application.rest_api.housing_units.services import HousingUnitsDataIngestionService, FilterHousingUnitsService, \
+from application.housing_units.services import HousingUnitsDataIngestionService, FilterHousingUnitsService, \
     RetrieveHousingUnitService, CreateHousingUnitService, UpdateHousingUnitService, HousingUnitFieldsSanityCheckService, \
     DeleteHousingUnitService
 from application.task_status.services import GetTaskStatusReportService

@@ -7,9 +7,9 @@ from celery.result import AsyncResult
 
 from application.housing_units.models import HousingUnit
 from application.infrastructure.error.errors import InvalidArgumentError, HousingUnitBaseError
-from application.rest_api.housing_units.errors import InvalidNumUnitsError
+from application.housing_units.errors import InvalidNumUnitsError
 from application.rest_api.housing_units.schemas import FilterHousingUnits, HousingUnitPostRequestBody
-from application.rest_api.housing_units.services import FilterHousingUnitsService, HousingUnitsDataIngestionService, \
+from application.housing_units.services import FilterHousingUnitsService, HousingUnitsDataIngestionService, \
     RetrieveHousingUnitService, CreateHousingUnitService, UpdateHousingUnitService, HousingUnitFieldsSanityCheckService, \
     DeleteHousingUnitService
 from application.rest_api.task_status.schemas import TaskStatus
@@ -54,7 +54,7 @@ class TestHousingUnitsDataIngestionService:
             ),
         ]
     )
-    @mock.patch('application.rest_api.housing_units.services.housing_unit_raw_data_ingestion_task')
+    @mock.patch('application.housing_units.services.housing_unit_raw_data_ingestion_task')
     @pytest.mark.asyncio
     async def test_apply(
             self,
